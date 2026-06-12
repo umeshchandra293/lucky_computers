@@ -1,4 +1,4 @@
-import { Activity, ArrowUpRight } from 'lucide-react';
+import {  ArrowUpRight } from 'lucide-react';
 import heroBg from '../assets/Bg1.jpg';
 
 // Preload image so it's never dropped from memory

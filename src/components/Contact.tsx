@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { MapPin, Phone, Globe, Clock, Send, TerminalSquare } from 'lucide-react';
+import { MapPin, Phone, Clock, Send, TerminalSquare } from 'lucide-react';
 
 export default function Contact() {
   const [isVisible, setIsVisible] = useState(false);
