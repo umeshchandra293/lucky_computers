@@ -42,7 +42,6 @@ export default function Services() {
       title: "Malware Removal",
       desc: "Complete virus and malware removal services using professional tools to eliminate threats.",
       icon: ShieldCheck,
-      // UPDATED: Reliable, production-free Unsplash image (Cybersecurity/Code theme)
       img: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=800",
       gridClass: "col-span-1",
       overlay: "bg-zinc-950/85 group-hover:bg-zinc-950/60",
@@ -113,6 +112,23 @@ export default function Services() {
   return (
     <div className="w-full bg-zinc-200 relative">
       
+      {/* --- BULLETPROOF MOBILE ANIMATION STYLES --- */}
+      <style>
+        {`
+          @keyframes mobileFadeUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+          }
+          .reveal-card {
+            animation-name: mobileFadeUp;
+            animation-duration: 0.6s;
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+            /* animation-fill-mode: both is CRUCIAL. It stops the cards from flashing before the animation starts */
+            animation-fill-mode: both; 
+          }
+        `}
+      </style>
+
       {/* Background Architectural Grid */}
       <div className="absolute inset-0 opacity-[0.04] pointer-events-none z-0" 
            style={{ backgroundImage: 'radial-gradient(#000 2px, transparent 2px)', backgroundSize: '32px 32px' }}>
@@ -147,12 +163,20 @@ export default function Services() {
             const Icon = card.icon;
             const isLarge = card.id === 'refurb';
             
-            const hideOnMobile = !isExpanded && index >= 3;
+            // Logic to control visibility and animations based on screen size and button state
+            const isExtraCard = index >= 3;
+            const isHiddenOnMobile = !isExpanded && isExtraCard;
+            const animateOnMobile = isExpanded && isExtraCard;
 
             return (
               <div
                 key={card.id}
-                className={`group relative overflow-hidden bg-zinc-950 ${card.gridClass} ${hideOnMobile ? 'hidden md:block' : 'block animate-in fade-in duration-700'}`}
+                className={`group relative overflow-hidden bg-zinc-950 ${card.gridClass} 
+                  ${isHiddenOnMobile ? 'hidden md:block' : 'block'} 
+                  ${animateOnMobile ? 'reveal-card md:!animate-none' : ''}
+                `}
+                // Inline style applies the staggered delay dynamically (0s, 0.1s, 0.2s, etc.)
+                style={animateOnMobile ? { animationDelay: `${(index - 3) * 0.15}s` } : {}}
               >
                 <LazyLoadImage
                   src={card.img}

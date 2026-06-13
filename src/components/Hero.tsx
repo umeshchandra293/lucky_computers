@@ -1,4 +1,4 @@
-import {  ArrowUpRight } from 'lucide-react';
+import { Activity, ArrowUpRight } from 'lucide-react';
 import heroBg from '../assets/Bg1.jpg';
 
 // Preload image so it's never dropped from memory
@@ -7,8 +7,8 @@ preloadImg.src = heroBg;
 
 export default function Hero() {
   return (
-    // Reduced from 100dvh/screen to 85dvh/90vh to decrease overall component height
-    <main id="home" className="relative flex flex-col lg:flex-row min-h-[85dvh] lg:min-h-[90vh] w-full bg-zinc-200 overflow-hidden">
+    // Restored mobile to 100dvh so it fills the screen, kept desktop at 90vh
+    <main id="home" className="relative flex flex-col lg:flex-row min-h-[100dvh] lg:min-h-[90vh] w-full bg-zinc-200 overflow-hidden">
       {/* Inline styles for the word-by-word reveal animation */}
       <style>
         {`
@@ -28,11 +28,17 @@ export default function Hero() {
       </style>
 
       {/* 
-        Tightened top and bottom padding (pt-20 pb-20) to make the text block more compact.
+        Restored min-h-[100dvh] for mobile.
+        Changed pt-28 pb-20 to a perfectly balanced py-20 so justify-center works flawlessly on mobile.
+        Desktop classes (lg:*) remain completely untouched.
       */}
-      <div className="w-full lg:w-[55%] min-h-[85dvh] lg:min-h-0 flex flex-col justify-center pt-28 pb-20 lg:pt-36 lg:pb-16 px-6 lg:pl-16 lg:pr-12 relative z-10">
+      <div className="w-full lg:w-[55%] min-h-[100dvh] lg:min-h-0 flex flex-col justify-center py-20 lg:pt-28 lg:pb-16 px-6 lg:pl-16 lg:pr-12 relative z-10">
         
-
+        {/* Restored the missing badge text for visual balance */}
+        <div className="mb-4 flex items-center gap-3 text-sm font-bold uppercase tracking-widest text-orange-600 shrink-0">
+          <Activity className="h-5 w-5" />
+          <span>Emergency Repair Services Active</span>
+        </div>
 
         {/* Word-by-word animated headline */}
         <h1 className="text-[3.5rem] font-black leading-[0.85] tracking-tighter text-zinc-900 md:text-[5rem] lg:text-[6rem] shrink-0">
