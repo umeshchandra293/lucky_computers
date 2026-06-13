@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect, useRef } from 'react';
 import { ShieldCheck, CheckCircle2, Wallet } from 'lucide-react';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
@@ -12,6 +15,29 @@ interface BrandInventory {
 }
 
 export default function FeaturedLaptops() {
+  // --- Scroll Trigger Animation State ---
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // Trigger the animation only when the section comes into view
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.15 } // Triggers when 15% of the section is visible
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   const brands: BrandInventory[] = [
     {
       name: "Lenovo",
@@ -48,7 +74,11 @@ export default function FeaturedLaptops() {
   ];
 
   return (
-    <section id="inventory" className="bg-zinc-950 px-4 py-10 lg:px-12 overflow-hidden relative">
+    <section 
+      id="inventory" 
+      ref={sectionRef} 
+      className="bg-zinc-950 px-4 py-10 lg:px-12 overflow-hidden relative"
+    >
       
       {/* Subtle Dark Tech Background Grid */}
       <div className="absolute inset-0 opacity-[0.02] pointer-events-none" 
@@ -58,7 +88,7 @@ export default function FeaturedLaptops() {
       <div className="max-w-6xl mx-auto relative z-10">
         
         {/* --- COMPACT HEADER --- */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+        <div className={`flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 ${isVisible ? 'animate-in fade-in slide-in-from-bottom-6 duration-700' : 'opacity-0'}`}>
           <div className="max-w-xl">
             <div className="mb-2 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-orange-500">
               <Wallet className="h-4 w-4" />
@@ -78,11 +108,14 @@ export default function FeaturedLaptops() {
         </div>
 
         {/* --- SUPER COMPACT BENTO GRID --- */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 auto-rows-[140px] lg:auto-rows-[180px]">
+        {/* Slightly increased min-height on mobile (160px instead of 140px) to prevent text clipping */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 auto-rows-[minmax(160px,auto)] lg:auto-rows-[180px]">
           {brands.map((brand, idx) => (
             <div
               key={idx}
-              className={`group relative overflow-hidden bg-zinc-900 border border-zinc-800 rounded-lg transition-all duration-500 hover:border-orange-500/50 hover:shadow-[0_0_30px_rgba(234,88,12,0.15)] flex flex-col justify-end ${brand.gridClass}`}
+              className={`group relative overflow-hidden bg-zinc-900 border border-zinc-800 rounded-lg transition-all duration-500 hover:border-orange-500/50 hover:shadow-[0_0_30px_rgba(234,88,12,0.15)] flex flex-col justify-end ${brand.gridClass} ${isVisible ? 'animate-in fade-in slide-in-from-bottom-8 duration-700' : 'opacity-0'}`}
+              // Stagger the delay so they cascade in beautifully (0ms, 150ms, 300ms...)
+              style={{ animationFillMode: 'both', animationDelay: `${idx * 150}ms` }}
             >
               {/* Background Image Setup */}
               <LazyLoadImage

@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect, useRef } from 'react';
 import { Award, Users, Zap, Shield, Star } from 'lucide-react';
 // Explicit type-only import to satisfy verbatimModuleSyntax
 import type { LucideIcon } from 'lucide-react';
@@ -12,6 +15,28 @@ interface CoreValue {
 }
 
 export default function CoreValues() {
+  // --- Scroll Trigger Animation State ---
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.15 } // Triggers when 15% of the section is visible
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   // Apply the interface to the array
   const values: CoreValue[] = [
     {
@@ -38,7 +63,11 @@ export default function CoreValues() {
   ];
 
   return (
-    <section id="core-values" className="bg-zinc-200 px-6 pt-8 pb-16 lg:px-16 overflow-hidden relative">
+    <section 
+      id="core-values" 
+      ref={sectionRef}
+      className="bg-zinc-200 px-6 pt-8 pb-16 lg:px-16 overflow-hidden relative"
+    >
       
       {/* SOLID SLANTED STRAIGHT LINES DESIGN (RIGHT SIDE) */}
       <div className="absolute right-0 top-0 bottom-0 w-[40%] pointer-events-none z-0 overflow-hidden">
@@ -53,15 +82,20 @@ export default function CoreValues() {
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="mb-8">
+        
+        {/* Header - Animates first */}
+        <div className={`mb-8 ${isVisible ? 'animate-in fade-in slide-in-from-bottom-4 duration-700' : 'opacity-0'}`}>
           <h3 className="text-2xl lg:text-3xl font-black uppercase tracking-tight text-zinc-900">Our Core Values</h3>
           <p className="mt-1 text-base font-medium text-zinc-600">The principles that power our workshop.</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
           
-          {/* Trust & Motivation Block (Left Side) */}
-          <div className="lg:col-span-5 bg-zinc-950 p-6 lg:p-8 flex flex-col justify-between text-white relative overflow-hidden group shadow-xl border border-zinc-800/50">
+          {/* Trust & Motivation Block (Left Side) - Animates second */}
+          <div 
+            className={`lg:col-span-5 bg-zinc-950 p-6 lg:p-8 flex flex-col justify-between text-white relative overflow-hidden group shadow-xl border border-zinc-800/50 ${isVisible ? 'animate-in fade-in slide-in-from-bottom-8 duration-700' : 'opacity-0'}`}
+            style={isVisible ? { animationFillMode: 'both', animationDelay: '150ms' } : {}}
+          >
             {/* Faded Shield Graphic */}
             <div className="absolute -right-12 -top-12 opacity-[0.03] transition-transform duration-700 group-hover:scale-110">
               <Shield className="w-64 h-64" />
@@ -95,12 +129,13 @@ export default function CoreValues() {
             </div>
           </div>
 
-          {/* Value Cards (Right Side) */}
+          {/* Value Cards (Right Side) - Animate sequentially after the left block */}
           <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-4">
             {values.map((val, idx) => (
               <div 
                 key={idx} 
-                className={`group relative bg-zinc-50 border border-zinc-300 p-6 overflow-hidden transition-all duration-300 hover:border-orange-500 hover:shadow-xl ${val.gridClass}`}
+                className={`group relative bg-zinc-50 border border-zinc-300 p-6 overflow-hidden transition-all duration-300 hover:border-orange-500 hover:shadow-xl ${val.gridClass} ${isVisible ? 'animate-in fade-in slide-in-from-bottom-8 duration-700' : 'opacity-0'}`}
+                style={isVisible ? { animationFillMode: 'both', animationDelay: `${(idx + 2) * 150}ms` } : {}}
               >
                 {/* Giant Faded Number Watermark */}
                 <div className="absolute -right-4 -bottom-6 text-[6rem] font-black leading-none text-zinc-200/50 select-none transition-transform duration-500 group-hover:-translate-y-4 group-hover:text-orange-100">

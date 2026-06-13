@@ -1,6 +1,31 @@
+"use client";
+
+import { useState, useEffect, useRef } from 'react';
 import { Cpu, Lock, BadgeCheck, ArrowRight, Server } from 'lucide-react';
 
 export default function WhyUs() {
+  // --- Scroll Trigger Animation State ---
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.15 } // Triggers when 15% of the section is visible on screen
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   const features = [
     {
       num: "01",
@@ -23,7 +48,11 @@ export default function WhyUs() {
   ];
 
   return (
-    <section id="why-us" className="bg-zinc-950 px-6 py-16 lg:px-16 overflow-hidden relative border-t border-zinc-900">
+    <section 
+      id="why-us" 
+      ref={sectionRef}
+      className="bg-zinc-950 px-6 py-16 lg:px-16 overflow-hidden relative border-t border-zinc-900"
+    >
       
       {/* ================= BACKGROUND ELEMENTS ================= */}
       
@@ -52,7 +81,7 @@ export default function WhyUs() {
       <div className="max-w-7xl mx-auto relative z-10">
         
         {/* --- HEADER: COMPACT & TECHNICAL --- */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-12 gap-8">
+        <div className={`flex flex-col lg:flex-row lg:items-end justify-between mb-12 gap-8 ${isVisible ? 'animate-in fade-in slide-in-from-bottom-6 duration-700' : 'opacity-0'}`}>
           <div>
             <div className="mb-4 flex items-center gap-3 text-[10px] font-bold uppercase tracking-widest text-orange-500">
               <Server className="h-4 w-4" />
@@ -60,7 +89,6 @@ export default function WhyUs() {
             </div>
             <h2 className="text-3xl lg:text-5xl font-black tracking-tighter uppercase leading-[0.9] text-white">
               Why Choose <br />
-              {/* Premium transparent stroke effect */}
               <span className="text-transparent" style={{ WebkitTextStroke: '1px #f97316' }}>
                 Our Services
               </span>
@@ -79,7 +107,9 @@ export default function WhyUs() {
           {features.map((feature, idx) => (
             <div 
               key={idx} 
-              className="group relative flex flex-col md:flex-row items-start md:items-center py-6 lg:py-8 border-b border-zinc-900 transition-all duration-500 hover:bg-zinc-900/50 cursor-default overflow-hidden"
+              className={`group relative flex flex-col md:flex-row items-start md:items-center py-6 lg:py-8 border-b border-zinc-900 transition-all duration-500 hover:bg-zinc-900/50 cursor-default overflow-hidden ${isVisible ? 'animate-in fade-in slide-in-from-bottom-8 duration-700 md:animate-none' : 'opacity-0'}`}
+              // Stagger delay dynamically so each server blade row drops down elegantly right after each other
+              style={isVisible ? { animationFillMode: 'both', animationDelay: `${idx * 150}ms` } : {}}
             >
               {/* Left Hover Accent Wire (Lights up on hover) */}
               <div className="absolute left-0 top-0 bottom-0 w-1 bg-orange-600 scale-y-0 group-hover:scale-y-100 transition-transform duration-500 origin-top shadow-[0_0_15px_rgba(234,88,12,0.8)]" />
@@ -112,7 +142,7 @@ export default function WhyUs() {
                   <p className="text-[11px] lg:text-xs text-zinc-500 font-medium leading-relaxed transition-colors duration-500 group-hover:text-zinc-300 max-w-sm">
                     {feature.desc}
                   </p>
-                  {/* Subtle hover arrow - slides in to signify action/forward movement */}
+                  {/* Subtle hover arrow - slides in to signify forward movement */}
                   <div className="hidden lg:flex items-center justify-center w-8 h-8 rounded-full bg-zinc-900 border border-zinc-800 transition-all duration-500 group-hover:border-orange-500 group-hover:bg-orange-500 shrink-0 overflow-hidden">
                     <ArrowRight className="h-3.5 w-3.5 text-zinc-500 transform -translate-x-4 transition-all duration-500 group-hover:translate-x-0 group-hover:text-white" />
                   </div>

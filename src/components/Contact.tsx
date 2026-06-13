@@ -1,9 +1,21 @@
+"use client";
+
 import { useState, useEffect, useRef } from 'react';
 import { MapPin, Phone, Clock, Send, TerminalSquare } from 'lucide-react';
 
 export default function Contact() {
+  // --- Scroll Trigger Animation State ---
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+
+  // --- Form State ---
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    service: '',
+    message: ''
+  });
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -13,7 +25,7 @@ export default function Contact() {
           observer.unobserve(entry.target);
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0.15 } // Triggers when 15% of the section is visible
     );
 
     if (sectionRef.current) {
@@ -23,6 +35,27 @@ export default function Contact() {
     return () => observer.disconnect();
   }, []);
 
+  // --- Handle Form Submission to WhatsApp ---
+  const handleWhatsAppSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Construct the WhatsApp message
+    const text = `*New Website Inquiry*%0A%0A*Name:* ${formData.name}%0A*Phone:* ${formData.phone}%0A*Email:* ${formData.email || 'Not provided'}%0A*Inquiry Type:* ${formData.service || 'Not selected'}%0A*Details:* ${formData.message}`;
+
+    // Use your primary support number (Include country code, no + or spaces)
+    const whatsappNumber = "919391919214"; 
+
+    // Redirect to WhatsApp
+    window.open(`https://wa.me/${whatsappNumber}?text=${text}`, '_blank');
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value
+    });
+  };
+
   return (
     <section 
       id="contact" 
@@ -30,24 +63,6 @@ export default function Contact() {
       className="w-full bg-zinc-950 relative overflow-hidden border-t border-zinc-900 py-16 lg:py-24 px-6 lg:px-12"
     >
       
-      {/* --- ANIMATION STYLES --- */}
-      <style>
-        {`
-          .scroll-reveal { opacity: 0; transform: translateY(15px); transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
-          .scroll-slide-right { opacity: 0; transform: translateX(-20px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-          .scroll-slide-left { opacity: 0; transform: translateX(20px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-          
-          .active-scrolled .scroll-reveal,
-          .active-scrolled .scroll-slide-right,
-          .active-scrolled .scroll-slide-left { opacity: 1; transform: translate(0); }
-
-          .active-scrolled .delay-100 { transition-delay: 100ms; }
-          .active-scrolled .delay-200 { transition-delay: 200ms; }
-          .active-scrolled .delay-300 { transition-delay: 300ms; }
-          .active-scrolled .delay-400 { transition-delay: 400ms; }
-        `}
-      </style>
-
       {/* --- BACKGROUND ELEMENTS --- */}
       {/* Subtle Tech Grid */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none z-0" 
@@ -66,10 +81,13 @@ export default function Contact() {
       {/* Ambient Orange Glow behind the form */}
       <div className="absolute bottom-[-10%] right-[10%] w-[400px] h-[400px] bg-orange-600/10 blur-[120px] rounded-full pointer-events-none z-0"></div>
 
-      <div className={`max-w-7xl mx-auto relative z-10 ${isVisible ? 'active-scrolled' : ''}`}>
+      <div className="max-w-7xl mx-auto relative z-10">
         
         {/* --- HEADER --- */}
-        <div className="text-center md:text-left mb-12 scroll-reveal">
+        <div 
+          className={`text-center md:text-left mb-12 ${isVisible ? 'animate-in fade-in slide-in-from-bottom-8 duration-700' : 'opacity-0'}`}
+          style={isVisible ? { animationFillMode: 'both' } : {}}
+        >
           <div className="mb-3 flex items-center justify-center md:justify-start gap-2 text-[10px] font-black uppercase tracking-widest text-orange-500">
             <TerminalSquare className="h-4 w-4" />
             <span className="tracking-[0.2em]">Initiate Connection</span>
@@ -85,7 +103,10 @@ export default function Contact() {
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-20">
           
           {/* --- LEFT COLUMN: CONTACT DETAILS & MAP --- */}
-          <div className="w-full lg:w-[45%] flex flex-col gap-8 scroll-slide-right delay-100">
+          <div 
+            className={`w-full lg:w-[45%] flex flex-col gap-8 ${isVisible ? 'animate-in fade-in slide-in-from-left-8 duration-700' : 'opacity-0'}`}
+            style={isVisible ? { animationFillMode: 'both', animationDelay: '200ms' } : {}}
+          >
             
             {/* Info Cards Matrix */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -120,8 +141,8 @@ export default function Contact() {
                     <h4 className="text-white font-bold text-[10px] uppercase tracking-widest">Support Line</h4>
                   </div>
                   <div className="text-zinc-300 font-medium text-xs">
-                    <p className="hover:text-orange-400 transition-colors cursor-pointer block mb-1">9391919214</p>
-                    <p className="hover:text-orange-400 transition-colors cursor-pointer block">9391919215</p>
+                    <a href="tel:+919391919214" className="hover:text-orange-400 transition-colors cursor-pointer block mb-1">9391919214</a>
+                    <a href="tel:+919391919215" className="hover:text-orange-400 transition-colors cursor-pointer block">9391919215</a>
                   </div>
                 </div>
               </div>
@@ -164,7 +185,10 @@ export default function Contact() {
           </div>
 
           {/* --- RIGHT COLUMN: CONTACT FORM --- */}
-          <div className="w-full lg:w-[55%] scroll-slide-left delay-200">
+          <div 
+            className={`w-full lg:w-[55%] ${isVisible ? 'animate-in fade-in slide-in-from-right-8 duration-700' : 'opacity-0'}`}
+            style={isVisible ? { animationFillMode: 'both', animationDelay: '400ms' } : {}}
+          >
             <div className="bg-zinc-900/40 border border-zinc-800 p-6 lg:p-10 rounded-2xl backdrop-blur-sm relative overflow-hidden">
               
               {/* Form Graphic Accents */}
@@ -175,7 +199,7 @@ export default function Contact() {
                 Send a <span className="text-orange-500">Message</span>
               </h3>
 
-              <form className="flex flex-col gap-5 relative z-10" onSubmit={(e) => e.preventDefault()}>
+              <form className="flex flex-col gap-5 relative z-10" onSubmit={handleWhatsAppSubmit}>
                 
                 {/* Top Row: Name & Phone */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -184,6 +208,9 @@ export default function Contact() {
                     <input 
                       type="text" 
                       id="name" 
+                      required
+                      value={formData.name}
+                      onChange={handleChange}
                       placeholder="John Doe"
                       className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-colors"
                     />
@@ -193,6 +220,9 @@ export default function Contact() {
                     <input 
                       type="tel" 
                       id="phone" 
+                      required
+                      value={formData.phone}
+                      onChange={handleChange}
                       placeholder="+91 00000 00000"
                       className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-colors"
                     />
@@ -204,7 +234,9 @@ export default function Contact() {
                   <label htmlFor="email" className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Email Address</label>
                   <input 
                     type="email" 
-                    id="email" 
+                    id="email"
+                    value={formData.email}
+                    onChange={handleChange}
                     placeholder="johndoe@example.com"
                     className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-colors"
                   />
@@ -215,14 +247,17 @@ export default function Contact() {
                   <label htmlFor="service" className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Inquiry Type</label>
                   <select 
                     id="service" 
+                    required
+                    value={formData.service}
+                    onChange={handleChange}
                     className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3.5 text-sm text-zinc-300 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-colors appearance-none cursor-pointer"
                   >
-                    <option value="" disabled selected>Select a Service...</option>
-                    <option value="repair">PC & Laptop Repairs</option>
-                    <option value="data">Data Recovery</option>
-                    <option value="upgrade">Hardware Upgrade</option>
-                    <option value="buy">Buy Refurbished</option>
-                    <option value="other">Other Inquiry</option>
+                    <option value="" disabled>Select a Service...</option>
+                    <option value="PC & Laptop Repairs">PC & Laptop Repairs</option>
+                    <option value="Data Recovery">Data Recovery</option>
+                    <option value="Hardware Upgrade">Hardware Upgrade</option>
+                    <option value="Buy Refurbished">Buy Refurbished</option>
+                    <option value="Other Inquiry">Other Inquiry</option>
                   </select>
                 </div>
 
@@ -232,6 +267,9 @@ export default function Contact() {
                   <textarea 
                     id="message" 
                     rows={4}
+                    required
+                    value={formData.message}
+                    onChange={handleChange}
                     placeholder="Briefly describe the issue or your requirements..."
                     className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-colors resize-none"
                   ></textarea>
@@ -242,7 +280,7 @@ export default function Contact() {
                   type="submit" 
                   className="mt-2 w-full bg-orange-600 text-white font-black uppercase tracking-widest text-xs py-4 rounded-lg flex items-center justify-center gap-3 transition-all duration-300 hover:bg-white hover:text-zinc-900 group shadow-[0_0_20px_rgba(234,88,12,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]"
                 >
-                  Transmit Request
+                  Send
                   <Send className="w-4 h-4 transform transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
                 </button>
 
