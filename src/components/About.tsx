@@ -29,7 +29,7 @@ export default function About() {
     <section 
       id="about" 
       ref={sectionRef}
-      className={`bg-zinc-200 px-4 sm:px-6 py-10 sm:py-12 lg:px-16 lg:py-14 relative overflow-hidden transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+      className={`bg-slate-50 px-4 sm:px-6 py-10 sm:py-12 lg:px-16 lg:py-14 relative overflow-hidden transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
     >
       
       {/* ================= ANIMATION STYLES ================= */}
@@ -65,19 +65,19 @@ export default function About() {
       {/* ================= DYNAMIC BACKGROUND (ORANGE EFFECTS) ================= */}
 
       {/* Soft Orange Glow behind the image (right side) */}
-      <div className="absolute right-[-15%] top-1/2 -translate-y-1/2 w-[60vw] max-w-[600px] aspect-square rounded-full bg-orange-500/30 blur-[110px] pointer-events-none z-0 animate-glow-pulse"></div>
+      <div className="absolute right-[-15%] top-1/2 -translate-y-1/2 w-[60vw] max-w-[600px] aspect-square rounded-full bg-blue-500/30 blur-[110px] pointer-events-none z-0 animate-glow-pulse"></div>
 
-      {/* Secondary smaller orange glow (top-left for balance) */}
-      <div className="absolute left-[-10%] top-[-10%] w-[35vw] max-w-[350px] aspect-square rounded-full bg-orange-400/20 blur-[90px] pointer-events-none z-0"></div>
+      {/* Secondary smaller blue glow (top-left for balance) */}
+      <div className="absolute left-[-10%] top-[-10%] w-[35vw] max-w-[350px] aspect-square rounded-full bg-blue-400/20 blur-[90px] pointer-events-none z-0"></div>
 
       {/* Slanted Orange Accent Lines (right side, behind image) */}
       <div className="absolute right-0 top-0 bottom-0 w-[55%] pointer-events-none z-0 overflow-hidden opacity-60">
         <div className="absolute right-[-20%] top-[-25%] h-[150%] flex gap-3 sm:gap-4 transform rotate-[25deg]">
-          <div className="w-1 h-full bg-gradient-to-b from-orange-500/40 via-orange-600/20 to-transparent"></div>
-          <div className="w-6 h-full bg-gradient-to-b from-orange-500/30 via-orange-600/15 to-transparent"></div>
-          <div className="w-2 h-full bg-gradient-to-b from-orange-500/40 via-orange-600/20 to-transparent"></div>
-          <div className="w-10 h-full bg-gradient-to-b from-orange-500/20 via-orange-600/10 to-transparent"></div>
-          <div className="w-1.5 h-full bg-gradient-to-b from-orange-500/40 via-orange-600/20 to-transparent"></div>
+          <div className="w-1 h-full bg-gradient-to-b from-blue-500/40 via-blue-600/20 to-transparent"></div>
+          <div className="w-6 h-full bg-gradient-to-b from-blue-500/30 via-blue-600/15 to-transparent"></div>
+          <div className="w-2 h-full bg-gradient-to-b from-blue-500/40 via-blue-600/20 to-transparent"></div>
+          <div className="w-10 h-full bg-gradient-to-b from-blue-500/20 via-blue-600/10 to-transparent"></div>
+          <div className="w-1.5 h-full bg-gradient-to-b from-blue-500/40 via-blue-600/20 to-transparent"></div>
         </div>
       </div>
 
@@ -87,7 +87,7 @@ export default function About() {
       </div>
 
       {/* Decorative Technical Line across the bottom */}
-      <div className="absolute bottom-4 left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange-400/60 to-transparent opacity-50 z-0"></div>
+      <div className="absolute bottom-4 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-400/60 to-transparent opacity-50 z-0"></div>
 
       {/* ================= CONTENT LAYOUT ================= */}
       {/* Changed flex-col-reverse to flex-col to control specific mobile stacking order */}
@@ -97,18 +97,18 @@ export default function About() {
         <div className="w-full order-1 block lg:hidden">
           {/* Badge */}
           <div className="mb-3 sm:mb-4 flex items-center gap-3 reveal-up delay-100">
-            <div className="flex h-6 w-6 items-center justify-center bg-orange-600 text-white shadow-lg shadow-orange-600/30">
+            <div className="flex h-6 w-6 items-center justify-center bg-blue-600 text-white shadow-lg shadow-blue-600/30">
               <Target className="h-3 w-3" />
             </div>
-            <span className="text-[11px] font-bold uppercase tracking-widest text-zinc-500">Our Story</span>
+            <span className="text-[11px] font-bold uppercase tracking-widest text-slate-500">Our Story</span>
           </div>
           
           {/* Headline */}
-          <h2 className="text-left text-3xl sm:text-4xl font-black tracking-tighter text-zinc-900 uppercase mb-2 leading-[1.05] reveal-up delay-200">
+          <h2 className="text-left text-3xl sm:text-4xl font-black tracking-tighter text-slate-900 uppercase mb-2 leading-[1.05] reveal-up delay-200">
             Get to know <br/>
-            <span className="relative inline-block mt-1 text-orange-600">
+            <span className="relative inline-block mt-1 text-blue-600">
               Lucky Computers
-              <span className="absolute bottom-1.5 left-0 w-full h-2 bg-orange-200/50 -z-10 transform -rotate-1"></span>
+              <span className="absolute bottom-1.5 left-0 w-full h-2 bg-blue-200/50 -z-10 transform -rotate-1"></span>
             </span>
           </h2>
         </div>
@@ -120,26 +120,26 @@ export default function About() {
           <div className="hidden lg:block">
             {/* Badge */}
             <div className="mb-4 flex items-center gap-3 reveal-up delay-100">
-              <div className="flex h-6 w-6 items-center justify-center bg-orange-600 text-white shadow-lg shadow-orange-600/30">
+              <div className="flex h-6 w-6 items-center justify-center bg-blue-600 text-white shadow-lg shadow-blue-600/30">
                 <Target className="h-3 w-3" />
               </div>
-              <span className="text-[11px] font-bold uppercase tracking-widest text-zinc-500">Our Story</span>
+              <span className="text-[11px] font-bold uppercase tracking-widest text-slate-500">Our Story</span>
             </div>
             
             {/* Headline */}
-            <h2 className="text-left text-5xl font-black tracking-tighter text-zinc-900 uppercase mb-5 leading-[1.05] reveal-up delay-200">
+            <h2 className="text-left text-5xl font-black tracking-tighter text-slate-900 uppercase mb-5 leading-[1.05] reveal-up delay-200">
               Get to know <br/>
-              <span className="relative inline-block mt-1 text-orange-600">
+              <span className="relative inline-block mt-1 text-blue-600">
                 Lucky Computers
-                <span className="absolute bottom-1.5 left-0 w-full h-2 bg-orange-200/50 -z-10 transform -rotate-1"></span>
+                <span className="absolute bottom-1.5 left-0 w-full h-2 bg-blue-200/50 -z-10 transform -rotate-1"></span>
               </span>
             </h2>
           </div>
           
           {/* Description Body (Shared across mobile and desktop) */}
-          <div className="space-y-3.5 sm:space-y-4 text-sm sm:text-[15px] font-medium text-zinc-600 reveal-up delay-300">
+          <div className="space-y-3.5 sm:space-y-4 text-sm sm:text-[15px] font-medium text-slate-600 reveal-up delay-300">
             <p className="leading-relaxed">
-              <strong className="text-zinc-900 font-black">LUCKY COMPUTERS</strong> was founded with a mission to provide affordable and expert computer repair services to our community. With a passion for tech and a heart for helping people, we specialize in refurbished systems, fast repairs, and data recovery.
+              <strong className="text-slate-900 font-black">LUCKY COMPUTERS</strong> was founded with a mission to provide affordable and expert computer repair services to our community. With a passion for tech and a heart for helping people, we specialize in refurbished systems, fast repairs, and data recovery.
             </p>
 
             <p className="leading-relaxed">
@@ -147,14 +147,14 @@ export default function About() {
             </p>
             
             {/* High-Contrast Location Card */}
-            <div className="mt-5 sm:mt-6 p-4 sm:p-5 bg-zinc-950 border-l-4 border-orange-600 shadow-xl flex gap-4 items-start group hover:bg-zinc-900 transition-all duration-300 hover:translate-x-2 reveal-up delay-400">
-              <div className="p-2 bg-zinc-800/50 rounded-lg shrink-0 group-hover:scale-110 transition-transform duration-300">
-                <MapPin className="h-4.5 w-4.5 sm:h-5 sm:w-5 text-orange-500" />
+            <div className="mt-5 sm:mt-6 p-4 sm:p-5 bg-slate-950 border-l-4 border-blue-600 shadow-xl flex gap-4 items-start group hover:bg-slate-900 transition-all duration-300 hover:translate-x-2 reveal-up delay-400">
+              <div className="p-2 bg-slate-800/50 rounded-lg shrink-0 group-hover:scale-110 transition-transform duration-300">
+                <MapPin className="h-4.5 w-4.5 sm:h-5 sm:w-5 text-blue-500" />
               </div>
               <div>
-                <h4 className="text-white font-bold text-sm sm:text-base mb-1 uppercase tracking-tight group-hover:text-orange-500 transition-colors">Our Hardware Lab</h4>
-                <p className="text-zinc-400 text-xs leading-relaxed">
-                  Located in the heart of Kukatpally, near <span className="text-zinc-100 font-bold border-b border-orange-600/50 pb-0.5">Metro Station Pillar No. 808</span>, our team of qualified technicians has been serving Hyderabad with dedication and technical expertise.
+                <h4 className="text-white font-bold text-sm sm:text-base mb-1 uppercase tracking-tight group-hover:text-blue-500 transition-colors">Our Hardware Lab</h4>
+                <p className="text-slate-400 text-xs leading-relaxed">
+                  Located in the heart of Kukatpally, near <span className="text-slate-100 font-bold border-b border-blue-600/50 pb-0.5">Metro Station Pillar No. 808</span>, our team of qualified technicians has been serving Hyderabad with dedication and technical expertise.
                 </p>
               </div>
             </div>
@@ -165,37 +165,37 @@ export default function About() {
         <div className="w-full lg:w-1/2 relative h-[300px] sm:h-[400px] lg:h-[480px] flex-shrink-0 group animate-float-ambient order-2 lg:order-2">
           
           {/* Architectural Backdrop Frame */}
-          <div className="absolute top-5 right-5 left-0 bottom-5 bg-zinc-300 border border-zinc-400 transition-transform duration-700 group-hover:-translate-x-3 group-hover:translate-y-3 z-0"></div>
+          <div className="absolute top-5 right-5 left-0 bottom-5 bg-slate-300 border border-slate-400 transition-transform duration-700 group-hover:-translate-x-3 group-hover:translate-y-3 z-0"></div>
           
           {/* Main Primary Image (anchored to the right) */}
-          <div className="absolute top-0 right-0 w-[92%] h-[92%] z-10 overflow-hidden shadow-2xl border border-zinc-800 bg-zinc-900">
+          <div className="absolute top-0 right-0 w-[92%] h-[92%] z-10 overflow-hidden shadow-2xl border border-slate-800 bg-slate-900">
             <img 
               src={imgA1} 
               alt="Lucky Computers Inside Setup" 
               className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             />
             {/* Orange Accent Overlay Tab */}
-            <div className="absolute top-0 right-0 w-2 h-14 bg-orange-600 shadow-[0_0_15px_rgba(234,88,12,0.8)]"></div>
+            <div className="absolute top-0 right-0 w-2 h-14 bg-blue-600 shadow-[0_0_15px_rgba(37,99,235,0.8)]"></div>
 
             {/* Subtle bottom gradient so the floating stats card reads cleanly */}
-            <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-zinc-950/70 to-transparent pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-slate-950/70 to-transparent pointer-events-none"></div>
           </div>
 
           {/* Floating Stats Card — replaces the standalone stats row to save space */}
-          <div className="absolute bottom-2 left-0 sm:bottom-4 sm:left-2 z-30 bg-zinc-950/90 backdrop-blur-md border border-zinc-800 border-l-4 border-l-orange-600 shadow-[0_15px_40px_rgba(0,0,0,0.45)] flex items-center divide-x divide-zinc-800 transition-transform duration-500 group-hover:-translate-y-2 reveal-up delay-400">
+          <div className="absolute bottom-2 left-0 sm:bottom-4 sm:left-2 z-30 bg-slate-950/90 backdrop-blur-md border border-slate-800 border-l-4 border-l-blue-600 shadow-[0_15px_40px_rgba(0,0,0,0.45)] flex items-center divide-x divide-slate-800 transition-transform duration-500 group-hover:-translate-y-2 reveal-up delay-400">
             
             <div className="px-4 py-3 sm:px-5 sm:py-3.5">
-              <p className="text-xl sm:text-2xl font-black text-white tracking-tighter leading-none">10k<span className="text-orange-500">+</span></p>
-              <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-zinc-400 mt-1">Repairs Done</p>
+              <p className="text-xl sm:text-2xl font-black text-white tracking-tighter leading-none">10k<span className="text-blue-500">+</span></p>
+              <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-400 mt-1">Repairs Done</p>
             </div>
             
             <div className="px-4 py-3 sm:px-5 sm:py-3.5 flex items-center gap-2.5">
-              <div className="h-8 w-8 flex items-center justify-center rounded-full bg-orange-600/15 text-orange-500 shrink-0">
+              <div className="h-8 w-8 flex items-center justify-center rounded-full bg-blue-600/15 text-blue-500 shrink-0">
                 <Wrench className="h-3.5 w-3.5" />
               </div>
               <div>
                 <p className="text-xs sm:text-sm font-black text-white uppercase tracking-tight leading-none">Expert</p>
-                <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-zinc-400 mt-1">Technicians</p>
+                <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-400 mt-1">Technicians</p>
               </div>
             </div>
 

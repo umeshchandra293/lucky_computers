@@ -1,210 +1,207 @@
-import { useState, useEffect, useRef } from 'react';
-import { Monitor, Smartphone, Keyboard, Fingerprint } from 'lucide-react';
+import { useRef, useState } from 'react';
+import {
+  motion,
+  AnimatePresence,
+  useInView,
+  useReducedMotion,
+} from 'framer-motion';
+import {
+  Cpu,
+  HardDrive,
+  MemoryStick,
+  Fan,
+  Smartphone,
+  MonitorX,
+  Check,
+  ShieldCheck,
+  ArrowUpRight,
+  MousePointerClick,
+  type LucideIcon,
+} from 'lucide-react';
 import ecoImg from '../assets/ECO.png';
 
+const WA = '919999999999'; // <-- your WhatsApp number
+
+type Spot = {
+  id: string;
+  x: number; // % of image width
+  y: number; // % of image height
+  icon: LucideIcon;
+  label: string;
+  verdict: string;
+  urgent?: boolean;
+  steps: string[];
+};
+
+// Coordinates sit on the actual parts in ECO.png — nudge if you re-crop the image.
+const SPOTS: Spot[] = [
+  { id: 'board', x: 11, y: 79, icon: Cpu, label: 'Motherboard', verdict: 'Chip-level micro-soldering brings boards back that others call dead.', steps: ['Board-level diagnosis', 'Micro-soldering & charging-IC repair', 'Load-tested before it leaves the bench'] },
+  { id: 'storage', x: 53, y: 81, icon: HardDrive, label: 'Storage & data', verdict: 'Lost files? Stop using the drive — recovery odds are high.', urgent: true, steps: ['Recovery assessment first', 'Forensic recovery from failed or formatted drives', 'Returned on secure backup media'] },
+  { id: 'ram', x: 88, y: 82, icon: MemoryStick, label: 'Memory & speed', verdict: 'A RAM + SSD upgrade makes an ageing machine feel brand new.', steps: ['RAM & SSD upgrade', 'Clean OS install & tune', 'Before/after benchmark so you see the gain'] },
+  { id: 'fan', x: 8, y: 12, icon: Fan, label: 'Cooling', verdict: 'Random shutdowns and fan noise? Thermal service fixes it.', steps: ['Fan & heatsink service', 'Fresh thermal repaste', 'Stress-tested until stable'] },
+  { id: 'phone', x: 19, y: 13, icon: Smartphone, label: 'Phones too', verdict: 'Boards, screens, and data on phones — same precision bench.', steps: ['Board & screen diagnosis', 'Component-level micro-soldering', 'Function & moisture test'] },
+  { id: 'screen', x: 47, y: 13, icon: MonitorX, label: 'Screens', verdict: 'Cracked or black display is usually a quick, affordable panel swap.', steps: ['Diagnose: panel vs. board', 'Genuine panel replacement', 'Colour calibration & test'] },
+];
+
+const STATS = [
+  { v: '10,000+', l: 'Devices revived' },
+  { v: '95%', l: 'Same-day fixes' },
+  { v: '10+', l: 'Years in Hyderabad' },
+];
+
+function waLink(label: string) {
+  return `https://wa.me/${WA}?text=${encodeURIComponent(`Hi Lucky Computers, I need help with: ${label}.`)}`;
+}
+
 export default function Ecosystem() {
-  const [isIntroVisible, setIsIntroVisible] = useState(false);
-  const introRef = useRef<HTMLElement>(null);
+  const reduced = useReducedMotion() ?? false;
+  const [active, setActive] = useState('board');
+  const sectionRef = useRef<HTMLElement>(null);
+  const inView = useInView(sectionRef, { once: true, margin: '-80px' });
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsIntroVisible(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold: 0.15 } 
-    );
-
-    if (introRef.current) {
-      observer.observe(introRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
+  const s = SPOTS.find((x) => x.id === active) ?? SPOTS[0];
 
   return (
-    <div className="w-full relative overflow-hidden bg-zinc-950">
-      
-      {/* --- ANIMATION STYLES --- */}
-      <style>
-        {`
-          /* Scroll Reveal Effects */
-          .scroll-reveal { opacity: 0; transform: translateY(15px); transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
-          .scroll-scale { opacity: 0; transform: scale(0.95); transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); }
-          
-          .active-scrolled .scroll-reveal { opacity: 1; transform: translateY(0); }
-          .active-scrolled .scroll-scale { opacity: 1; transform: scale(1); }
+    <section ref={sectionRef} id="ecosystem" className="relative w-full overflow-hidden bg-slate-950 text-white">
+      <style>{`
+        @keyframes ecoScan { 0%{top:0;opacity:0} 12%{opacity:.9} 88%{opacity:.9} 100%{top:100%;opacity:0} }
+        .eco-scan { animation: ecoScan 3.6s linear infinite; }
+        @media (prefers-reduced-motion: reduce){ .eco-scan{ animation:none; } }
+      `}</style>
 
-          .active-scrolled .delay-100 { transition-delay: 100ms; }
-          .active-scrolled .delay-200 { transition-delay: 200ms; }
-          .active-scrolled .delay-300 { transition-delay: 300ms; }
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-950 to-black" />
+      <div className="pointer-events-none absolute inset-0" style={{ background: 'radial-gradient(ellipse 55% 45% at 50% 40%, rgba(37,99,235,0.10), transparent 70%)' }} />
+      <div className="pointer-events-none absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-600/50 to-transparent" />
 
-          /* Background Grid Parallax */
-          @keyframes gridMove {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(32px); }
-          }
-          .animate-grid { animation: gridMove 2s linear infinite; }
+      <div className="relative mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20 lg:px-12">
+        {/* heading */}
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-8 max-w-2xl sm:mb-10"
+        >
+          <div className="mb-3 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-blue-500">
+            <ShieldCheck className="h-4 w-4" /> Diagnosis — start here
+          </div>
+          <h2 className="text-4xl font-black uppercase leading-[0.9] tracking-tighter sm:text-6xl">
+            Point at{' '}
+            <span className="italic text-transparent" style={{ WebkitTextStroke: '1.5px #3b82f6' }}>
+              what&rsquo;s broken.
+            </span>
+          </h2>
+          <p className="mt-4 text-sm text-slate-400 sm:text-base">
+            Tap any part below and we&rsquo;ll tell you exactly how we fix it — and whether it&rsquo;s worth saving.
+          </p>
+        </motion.div>
 
-          /* 3D Hardware Float */
-          @keyframes float3d {
-            0%, 100% { transform: translateY(0) rotateX(1deg) rotateY(-1deg); }
-            50% { transform: translateY(-8px) rotateX(-1deg) rotateY(1deg); }
-          }
-          .animate-3d-float { animation: float3d 6s ease-in-out infinite; transform-style: preserve-3d; }
+        <div className="grid gap-6 lg:grid-cols-[1.5fr_1fr] lg:items-start lg:gap-8">
+          {/* interactive image */}
+          <div className="relative">
+            <div className="relative overflow-hidden rounded-2xl border border-slate-800">
+              <img src={ecoImg} alt="Lucky Computers component bench" className="block h-auto w-full" />
 
-          /* Holographic Diagnostics Scanline */
-          @keyframes scanline {
-            0% { top: 0%; opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { top: 100%; opacity: 0; }
-          }
-          .animate-scan { animation: scanline 3s linear infinite; }
-
-          /* Masked grid — fades out toward the edges so it doesn't look like wallpaper */
-          .grid-mask {
-            -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 30%, transparent 100%);
-            mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 30%, transparent 100%);
-          }
-
-          @media (prefers-reduced-motion: reduce) {
-            .animate-grid, .animate-3d-float, .animate-scan { animation: none; }
-            .scroll-reveal, .scroll-scale { transition: none; opacity: 1; transform: none; }
-          }
-        `}
-      </style>
-
-      {/* --- BACKGROUND ELEMENTS (Layered for depth, not flat black) --- */}
-      
-      {/* 1. Vertical depth gradient: lighter at top, darkest at the bottom */}
-      <div className="absolute inset-0 bg-gradient-to-b from-zinc-900 via-zinc-950 to-black pointer-events-none z-0"></div>
-
-      {/* 2. Radial spotlight behind the hero image — focuses the eye on the hardware */}
-      <div className="absolute inset-0 pointer-events-none z-0"
-           style={{ background: 'radial-gradient(ellipse 60% 45% at 50% 48%, rgba(234,88,12,0.08), transparent 70%)' }}>
-      </div>
-
-      {/* 3. Hairline top border to crisply separate from the light section above */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange-600/50 to-transparent z-10"></div>
-
-      {/* 4. Moving Tech Grid — now masked so it fades at the edges */}
-      <div className="absolute inset-[-100%] opacity-[0.05] pointer-events-none z-0 animate-grid grid-mask" 
-           style={{ backgroundImage: 'radial-gradient(#fff 2px, transparent 2px)', backgroundSize: '32px 32px' }}>
-      </div>
-
-      {/* 5. Ambient corner glows (subtle, asymmetric) */}
-      <div className="absolute top-[35%] right-[-12%] w-[55vw] max-w-[520px] aspect-[5/3] bg-orange-600/10 blur-[100px] rounded-full pointer-events-none z-0 transform -rotate-45"></div>
-      <div className="absolute bottom-[-10%] left-[-12%] w-[40vw] max-w-[400px] aspect-square bg-orange-500/[0.06] blur-[110px] rounded-full pointer-events-none z-0"></div>
-
-      {/* 6. Edge vignette — darkens the corners so content pops in the center */}
-      <div className="absolute inset-0 pointer-events-none z-0"
-           style={{ background: 'radial-gradient(ellipse 90% 80% at 50% 50%, transparent 55%, rgba(0,0,0,0.5) 100%)' }}>
-      </div>
-
-      {/* --- CONTENT CONTAINER --- */}
-      <section 
-        ref={introRef}
-        className={`relative z-10 py-10 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-12 ${
-          isIntroVisible ? 'active-scrolled' : ''
-        }`}
-      >
-        <div className="max-w-6xl mx-auto flex flex-col items-center relative z-10">
-          
-          {/* --- SPLIT HEADER SECTION --- */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end w-full mb-8 sm:mb-10 lg:mb-12 gap-6 md:gap-8">
-            
-            {/* Left Side: Headline */}
-            <div className="text-left w-full md:w-1/2">
-              <div className="mb-3 sm:mb-4 flex items-center justify-start gap-2 text-[10px] font-black uppercase tracking-widest text-orange-500 scroll-reveal">
-                <Fingerprint className="h-4 w-4" />
-                <span className="tracking-[0.2em]">The Complete Ecosystem</span>
+              <div className="pointer-events-none absolute inset-0 overflow-hidden mix-blend-overlay">
+                <div className="eco-scan absolute left-0 h-0.5 w-full bg-blue-400 shadow-[0_0_18px_3px_#2563eb]" />
               </div>
-              
-              <h3 className="text-3xl sm:text-4xl lg:text-6xl xl:text-[4rem] font-black text-white leading-[0.9] lg:leading-[0.85] tracking-tighter scroll-reveal delay-100 uppercase">
-                We Repair.<br />
-                We Upgrade.
-              </h3>
-            </div>
 
-            {/* Right Side: Continuation */}
-            <div className="text-left w-full md:w-[45%] flex flex-col">
-              <h3 className="text-3xl sm:text-4xl lg:text-6xl xl:text-[4rem] font-black text-transparent italic leading-[0.9] lg:leading-[0.85] tracking-tighter mb-3 sm:mb-4 scroll-reveal delay-200 uppercase" style={{ WebkitTextStroke: '1.5px #f97316' }}>
-                We Equip.
-              </h3>
-              
-              {/* Sharp left-bordered description */}
-              <p className="text-xs md:text-sm text-zinc-400 font-medium scroll-reveal delay-300 pl-4 border-l-2 border-orange-600">
-                If it processes data, we handle it. From reviving core structural hardware to arming you with premium precision peripherals.
-              </p>
+              {SPOTS.map((spot) => {
+                const on = spot.id === active;
+                return (
+                  <button
+                    key={spot.id}
+                    onClick={() => setActive(spot.id)}
+                    onMouseEnter={() => !reduced && setActive(spot.id)}
+                    aria-label={spot.label}
+                    className="group absolute z-10 -translate-x-1/2 -translate-y-1/2"
+                    style={{ left: `${spot.x}%`, top: `${spot.y}%` }}
+                  >
+                    <span className="relative flex h-6 w-6 items-center justify-center">
+                      {!reduced && (
+                        <span className={`absolute inline-flex h-full w-full rounded-full ${on ? 'animate-ping bg-blue-500/70' : 'bg-white/25'}`} />
+                      )}
+                      <span className={`relative h-3.5 w-3.5 rounded-full ring-2 transition-all ${on ? 'scale-110 bg-blue-500 ring-blue-300' : 'bg-white ring-black/30'}`} />
+                    </span>
+                    <span className={`pointer-events-none absolute left-1/2 top-7 hidden -translate-x-1/2 whitespace-nowrap rounded-full px-2 py-0.5 text-[9px] font-black uppercase tracking-widest transition-opacity lg:block ${on ? 'bg-blue-600 text-white opacity-100' : 'bg-black/70 text-slate-300 opacity-0 group-hover:opacity-100'}`}>
+                      {spot.label}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
-
+            <p className="mt-3 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-600">
+              <MousePointerClick className="h-3.5 w-3.5" /> Tap a glowing point to inspect it
+            </p>
           </div>
 
-          {/* --- CENTER HERO IMAGE WITH DIAGNOSTIC SCANNER --- */}
-          <div className="w-full max-w-4xl relative my-2 sm:my-4 scroll-scale delay-200 z-20 perspective-[1000px]">
-            <div className="animate-3d-float relative">
-              
-              {/* Soft reflection/glow pad under the hardware */}
-              <div className="absolute bottom-[-8%] left-1/2 -translate-x-1/2 w-[80%] h-10 sm:h-14 bg-orange-600/15 blur-2xl rounded-[100%] pointer-events-none"></div>
-
-              {/* Diagnostic Laser Scanline Container */}
-              <div className="absolute inset-0 z-30 pointer-events-none overflow-hidden mix-blend-overlay rounded-xl">
-                <div className="w-full h-0.5 bg-orange-400 shadow-[0_0_20px_4px_#ea580c] animate-scan absolute left-0"></div>
-                <div className="w-full h-12 bg-gradient-to-b from-transparent to-orange-500/20 animate-scan absolute left-0 -translate-y-full"></div>
-              </div>
-
-              {/* The Hardware Image */}
-              <img
-                src={ecoImg}
-                alt="Hardware and Peripherals Ecosystem Layout"
-                className="w-full h-auto object-contain drop-shadow-[0_15px_40px_rgba(0,0,0,0.6)]"
-              />
+          {/* terminal readout — chrome back, no CTA row */}
+          <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/50 backdrop-blur-sm">
+            <div className="flex items-center gap-2 border-b border-slate-800 px-5 py-3">
+              <span className="h-2.5 w-2.5 rounded-full bg-slate-700" />
+              <span className="h-2.5 w-2.5 rounded-full bg-slate-700" />
+              <span className="h-2.5 w-2.5 rounded-full bg-blue-500" />
+              <span className="ml-2 font-mono text-[10px] uppercase tracking-widest text-slate-500">diagnostic_readout</span>
             </div>
+
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={s.id}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -14 }}
+                transition={{ duration: 0.3 }}
+                className="p-6 sm:p-7"
+              >
+                <div className="mb-4 flex items-center gap-3">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-lg border border-blue-500/40 bg-blue-500/10 text-blue-500">
+                    <s.icon className="h-5 w-5" />
+                  </span>
+                  <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-black uppercase tracking-widest ${s.urgent ? 'bg-blue-500/15 text-blue-400' : 'bg-emerald-500/15 text-emerald-400'}`}>
+                    <Check className="h-3.5 w-3.5" />
+                    {s.urgent ? 'Act fast — fixable' : 'Fixable'}
+                  </span>
+                </div>
+
+                <p className="text-lg font-bold leading-snug text-white">{s.verdict}</p>
+
+                <div className="mt-5 font-mono text-[10px] uppercase tracking-widest text-slate-500">What we&rsquo;ll do</div>
+                <ul className="mt-3 space-y-2.5">
+                  {s.steps.map((step, i) => (
+                    <motion.li
+                      key={step}
+                      initial={reduced ? false : { opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: reduced ? 0 : 0.1 + i * 0.1 }}
+                      className="flex items-start gap-3 text-sm text-slate-300"
+                    >
+                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-800 text-[10px] font-black text-blue-500">{i + 1}</span>
+                      {step}
+                    </motion.li>
+                  ))}
+                </ul>
+              </motion.div>
+            </AnimatePresence>
           </div>
-
-          {/* --- BOTTOM FEATURES GRID (Left-Aligned) --- */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 w-full mt-8 sm:mt-10 relative z-10">
-            
-            {/* Feature 1 */}
-            <div className="flex flex-col items-start text-left group scroll-reveal delay-100 p-4 sm:p-5 rounded-xl hover:bg-zinc-900/60 transition-colors border border-zinc-900/80 sm:border-transparent sm:hover:border-zinc-800 bg-zinc-900/30 sm:bg-transparent">
-              <div className="flex-shrink-0 w-10 h-10 bg-zinc-950 border border-zinc-800 shadow-xl flex items-center justify-center rounded-lg text-zinc-500 mb-3 sm:mb-4 transition-all duration-300 group-hover:border-orange-500 group-hover:text-orange-500 group-hover:shadow-[0_0_15px_rgba(234,88,12,0.3)]">
-                <Monitor className="w-4 h-4" />
-              </div>
-              <h4 className="text-zinc-100 font-black text-sm uppercase tracking-tight mb-1.5">Systems & Laptops</h4>
-              <p className="text-[11px] text-zinc-500 font-medium leading-relaxed">
-                Advanced board diagnostics, thermal optimization, and high-performance custom builds.
-              </p>
-            </div>
-            
-            {/* Feature 2 */}
-            <div className="flex flex-col items-start text-left group scroll-reveal delay-200 p-4 sm:p-5 rounded-xl hover:bg-zinc-900/60 transition-colors border border-zinc-900/80 sm:border-transparent sm:hover:border-zinc-800 bg-zinc-900/30 sm:bg-transparent">
-              <div className="flex-shrink-0 w-10 h-10 bg-zinc-950 border border-zinc-800 shadow-xl flex items-center justify-center rounded-lg text-zinc-500 mb-3 sm:mb-4 transition-all duration-300 group-hover:border-orange-500 group-hover:text-orange-500 group-hover:shadow-[0_0_15px_rgba(234,88,12,0.3)]">
-                <Smartphone className="w-4 h-4" />
-              </div>
-              <h4 className="text-zinc-100 font-black text-sm uppercase tracking-tight mb-1.5">Mobile Devices</h4>
-              <p className="text-[11px] text-zinc-500 font-medium leading-relaxed">
-                Precision micro-soldering, flawless screen architecture, and secure deep data extraction.
-              </p>
-            </div>
-            
-            {/* Feature 3 */}
-            <div className="flex flex-col items-start text-left group scroll-reveal delay-300 p-4 sm:p-5 rounded-xl hover:bg-zinc-900/60 transition-colors border border-zinc-900/80 sm:border-transparent sm:hover:border-zinc-800 bg-zinc-900/30 sm:bg-transparent sm:col-span-2 md:col-span-1">
-              <div className="flex-shrink-0 w-10 h-10 bg-zinc-950 border border-zinc-800 shadow-xl flex items-center justify-center rounded-lg text-zinc-500 mb-3 sm:mb-4 transition-all duration-300 group-hover:border-orange-500 group-hover:text-orange-500 group-hover:shadow-[0_0_15px_rgba(234,88,12,0.3)]">
-                <Keyboard className="w-4 h-4" />
-              </div>
-              <h4 className="text-zinc-100 font-black text-sm uppercase tracking-tight mb-1.5">Premium Gear</h4>
-              <p className="text-[11px] text-zinc-500 font-medium leading-relaxed">
-                Vetted performance mechanical keyboards, precision hardware tracking mice, and high-speed storage.
-              </p>
-            </div>
-
-          </div>
-
         </div>
-      </section>
-    </div>
+
+        {/* trust strip + single quiet contact path */}
+        <div className="mt-10 flex flex-col gap-6 border-t border-slate-900 pt-8 sm:mt-12 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex gap-8">
+            {STATS.map((st) => (
+              <div key={st.l}>
+                <div className="text-2xl font-black tracking-tighter text-white sm:text-3xl">{st.v}</div>
+                <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500">{st.l}</div>
+              </div>
+            ))}
+          </div>
+          <p className="max-w-xs text-xs text-slate-500 sm:text-right">
+            We also <span className="text-slate-300">upgrade, build, and equip</span> — desktops, phones, and gear.{' '}
+            <a href={waLink('something else')} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-bold text-blue-500 hover:text-blue-400">
+              Just ask <ArrowUpRight className="h-3 w-3" />
+            </a>
+          </p>
+        </div>
+      </div>
+    </section>
   );
 }

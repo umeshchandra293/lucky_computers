@@ -11,20 +11,17 @@ import Footer from './Footer';
 
 export default function HomePage() {
   return (
-    <div className="relative min-h-screen bg-zinc-200 font-sans text-zinc-900 selection:bg-orange-500 selection:text-white overflow-x-hidden">
+    <div className="relative min-h-screen bg-slate-50 font-sans text-slate-900 selection:bg-blue-500 selection:text-white overflow-x-hidden">
       <Navbar />
       <Hero />
+      <Services />
       <Ecosystem />
-       <Services />
-       <FeaturedLaptops />
+      <FeaturedLaptops />
+      <WhyUs />
       <About />
-       <WhyUs />
       <CoreValues />
       <Contact />
-      <Footer />
-        {/* <-- 2. Place it here */}
-
-     
+      <Footer />   
     </div>
   );
 }

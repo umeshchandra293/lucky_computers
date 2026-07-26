@@ -2,10 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Award, Users, Zap, Shield, Star } from 'lucide-react';
-// Explicit type-only import to satisfy verbatimModuleSyntax
 import type { LucideIcon } from 'lucide-react';
-
-// Define the TypeScript interface for our value objects
 interface CoreValue {
   num: string;
   icon: LucideIcon;
@@ -15,7 +12,6 @@ interface CoreValue {
 }
 
 export default function CoreValues() {
-  // --- Scroll Trigger Animation State ---
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -27,7 +23,7 @@ export default function CoreValues() {
           observer.unobserve(entry.target);
         }
       },
-      { threshold: 0.15 } // Triggers when 15% of the section is visible
+      { threshold: 0.15 } 
     );
 
     if (sectionRef.current) {
@@ -66,18 +62,18 @@ export default function CoreValues() {
     <section 
       id="core-values" 
       ref={sectionRef}
-      className="bg-zinc-200 px-6 pt-8 pb-16 lg:px-16 overflow-hidden relative"
+      className="bg-slate-50 px-6 pt-8 pb-16 lg:px-16 overflow-hidden relative"
     >
       
       {/* SOLID SLANTED STRAIGHT LINES DESIGN (RIGHT SIDE) */}
       <div className="absolute right-0 top-0 bottom-0 w-[40%] pointer-events-none z-0 overflow-hidden">
         {/* Clean, un-faded crisp lines grouped and rotated together */}
         <div className="absolute right-[-15%] top-[-20%] h-[150%] flex gap-4 transform rotate-[25deg]">
-          <div className="w-1.5 h-full bg-orange-600"></div>
-          <div className="w-4 h-full bg-orange-600"></div>
-          <div className="w-0.5 h-full bg-orange-600"></div>
-          <div className="w-8 h-full bg-orange-600"></div>
-          <div className="w-2 h-full bg-orange-600"></div>
+          <div className="w-1.5 h-full bg-blue-600"></div>
+          <div className="w-4 h-full bg-blue-600"></div>
+          <div className="w-0.5 h-full bg-blue-600"></div>
+          <div className="w-8 h-full bg-blue-600"></div>
+          <div className="w-2 h-full bg-blue-600"></div>
         </div>
       </div>
 
@@ -85,15 +81,15 @@ export default function CoreValues() {
         
         {/* Header - Animates first */}
         <div className={`mb-8 ${isVisible ? 'animate-in fade-in slide-in-from-bottom-4 duration-700' : 'opacity-0'}`}>
-          <h3 className="text-2xl lg:text-3xl font-black uppercase tracking-tight text-zinc-900">Our Core Values</h3>
-          <p className="mt-1 text-base font-medium text-zinc-600">The principles that power our workshop.</p>
+          <h3 className="text-2xl lg:text-3xl font-black uppercase tracking-tight text-slate-900">Our Core Values</h3>
+          <p className="mt-1 text-base font-medium text-slate-600">The principles that power our workshop.</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
           
           {/* Trust & Motivation Block (Left Side) - Animates second */}
           <div 
-            className={`lg:col-span-5 bg-zinc-950 p-6 lg:p-8 flex flex-col justify-between text-white relative overflow-hidden group shadow-xl border border-zinc-800/50 ${isVisible ? 'animate-in fade-in slide-in-from-bottom-8 duration-700' : 'opacity-0'}`}
+            className={`lg:col-span-5 bg-slate-950 p-6 lg:p-8 flex flex-col justify-between text-white relative overflow-hidden group shadow-xl border border-slate-800/50 ${isVisible ? 'animate-in fade-in slide-in-from-bottom-8 duration-700' : 'opacity-0'}`}
             style={isVisible ? { animationFillMode: 'both', animationDelay: '150ms' } : {}}
           >
             {/* Faded Shield Graphic */}
@@ -103,28 +99,28 @@ export default function CoreValues() {
             
             <div className="relative z-10">
               <div className="flex items-center gap-2 mb-4">
-                <div className="h-2 w-2 bg-orange-500 rounded-full animate-pulse" />
-                <span className="text-xs font-bold uppercase tracking-widest text-orange-500">The Lucky Promise</span>
+                <div className="h-2 w-2 bg-blue-500 rounded-full animate-pulse" />
+                <span className="text-xs font-bold uppercase tracking-widest text-blue-500">The Lucky Promise</span>
               </div>
               <h4 className="text-2xl lg:text-4xl font-black uppercase tracking-tighter leading-[0.9] mb-4">
                 Built on Trust. <br />
-                <span className="text-zinc-600">Engineered for Performance.</span>
+                <span className="text-slate-600">Engineered for Performance.</span>
               </h4>
-              <p className="text-sm text-zinc-400 font-medium leading-relaxed mb-8">
+              <p className="text-sm text-slate-400 font-medium leading-relaxed mb-8">
                 We don't just fix hardware; we restore your connection to your work and life. Every screw turned and circuit tested is backed by our unwavering commitment to absolute integrity. Your devices hold your digital life—we treat them with the respect they demand.
               </p>
             </div>
 
             {/* 5-Star Trust Badge */}
-            <div className="relative z-10 flex items-center gap-4 border-t border-zinc-800 pt-6 mt-auto">
+            <div className="relative z-10 flex items-center gap-4 border-t border-slate-800 pt-6 mt-auto">
               <div className="flex gap-1">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-orange-500 text-orange-500" />
+                  <Star key={i} className="h-4 w-4 fill-blue-500 text-blue-500" />
                 ))}
               </div>
               <div>
                 <p className="text-xs font-black uppercase tracking-wider text-white">5-Star Rated Service</p>
-                <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Trusted in Hyderabad</p>
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Trusted in Hyderabad</p>
               </div>
             </div>
           </div>
@@ -134,28 +130,28 @@ export default function CoreValues() {
             {values.map((val, idx) => (
               <div 
                 key={idx} 
-                className={`group relative bg-zinc-50 border border-zinc-300 p-6 overflow-hidden transition-all duration-300 hover:border-orange-500 hover:shadow-xl ${val.gridClass} ${isVisible ? 'animate-in fade-in slide-in-from-bottom-8 duration-700' : 'opacity-0'}`}
+                className={`group relative bg-white border border-slate-200 p-6 overflow-hidden transition-all duration-300 hover:border-blue-500 hover:shadow-xl ${val.gridClass} ${isVisible ? 'animate-in fade-in slide-in-from-bottom-8 duration-700' : 'opacity-0'}`}
                 style={isVisible ? { animationFillMode: 'both', animationDelay: `${(idx + 2) * 150}ms` } : {}}
               >
                 {/* Giant Faded Number Watermark */}
-                <div className="absolute -right-4 -bottom-6 text-[6rem] font-black leading-none text-zinc-200/50 select-none transition-transform duration-500 group-hover:-translate-y-4 group-hover:text-orange-100">
+                <div className="absolute -right-4 -bottom-6 text-[6rem] font-black leading-none text-slate-200/50 select-none transition-transform duration-500 group-hover:-translate-y-4 group-hover:text-blue-100">
                   {val.num}
                 </div>
 
                 <div className="relative z-10">
-                  <div className="mb-4 inline-block bg-white border border-zinc-200 p-3 shadow-sm transition-colors duration-300 group-hover:border-orange-200 group-hover:bg-orange-50">
-                    <val.icon className="h-6 w-6 text-zinc-900 transition-colors duration-300 group-hover:text-orange-600" />
+                  <div className="mb-4 inline-block bg-white border border-slate-200 p-3 shadow-sm transition-colors duration-300 group-hover:border-blue-200 group-hover:bg-blue-50">
+                    <val.icon className="h-6 w-6 text-slate-900 transition-colors duration-300 group-hover:text-blue-600" />
                   </div>
-                  <h4 className="text-xl font-black uppercase tracking-tight text-zinc-900 mb-2">
+                  <h4 className="text-xl font-black uppercase tracking-tight text-slate-900 mb-2">
                     {val.title}
                   </h4>
-                  <p className="text-sm text-zinc-600 font-medium leading-relaxed max-w-sm">
+                  <p className="text-sm text-slate-600 font-medium leading-relaxed max-w-sm">
                     {val.desc}
                   </p>
                 </div>
 
                 {/* Top Border Accent */}
-                <div className="absolute top-0 left-0 h-1 w-0 bg-orange-500 transition-all duration-500 ease-out group-hover:w-full" />
+                <div className="absolute top-0 left-0 h-1 w-0 bg-blue-500 transition-all duration-500 ease-out group-hover:w-full" />
               </div>
             ))}
           </div>
