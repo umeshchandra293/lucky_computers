@@ -18,6 +18,7 @@
     "gsap": "^3.15.0",
     "lucide-react": "^1.17.0",
     "maath": "^0.10.8",
+    "next": "^16.2.12",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-lazy-load-image-component": "^1.6.3",

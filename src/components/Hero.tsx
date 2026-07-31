@@ -95,7 +95,8 @@ function ServiceImageBackdrop() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 2, ease: 'easeOut' }}
-      className="pointer-events-none absolute inset-y-0 right-0 z-0 hidden w-[58%] lg:block xl:w-[52%]"
+      // Changed classes here: removed 'hidden lg:block' and added responsive widths starting from mobile
+      className="pointer-events-none absolute inset-y-0 right-0 z-0 w-[85%] sm:w-[70%] lg:w-[58%] xl:w-[52%]"
       style={{
         maskImage: 'linear-gradient(to right, transparent 0%, black 38%, black 100%)',
         WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 38%, black 100%)',
@@ -105,7 +106,8 @@ function ServiceImageBackdrop() {
         src={HERO_IMAGE_URL}
         alt=""
         aria-hidden="true"
-        className="h-full w-full object-cover object-center opacity-[0.16] grayscale-[15%]"
+        // Lowered opacity slightly on mobile so it doesn't overpower the text, restores on sm screens
+        className="h-full w-full object-cover object-center opacity-[0.12] sm:opacity-[0.16] grayscale-[15%]"
         loading="eager"
       />
     </motion.div>
@@ -168,7 +170,7 @@ export default function CinematicHero() {
         {!reduced && <Particles />}
       </div>
 
-      <div className="relative z-20 mx-auto flex h-full w-full max-w-[1600px] flex-col justify-center px-6 sm:px-10 lg:px-16">
+      <div className="relative z-20 mx-auto flex h-full w-full max-w-[1600px] flex-col justify-center px-4 sm:px-10 lg:px-16">
         <AnimatePresence mode="wait">
 
           {/* ================= PHASE 1 & 2 ================= */}
@@ -181,7 +183,7 @@ export default function CinematicHero() {
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
               className="absolute inset-0 flex items-center justify-center px-4 text-center pointer-events-none"
             >
-              <h1 className="max-w-[19ch] text-balance text-[clamp(2.5rem,9vw,6rem)] font-black uppercase leading-[0.95] tracking-tight text-slate-900 drop-shadow-sm sm:leading-[0.9] lg:max-w-none lg:tracking-tighter">
+              <h1 className="max-w-[19ch] text-balance text-[clamp(1.8rem,9vw,6rem)] sm:text-[clamp(2.5rem,9vw,6rem)] font-black uppercase leading-[0.95] tracking-tight text-slate-900 drop-shadow-sm sm:leading-[0.9] lg:max-w-none lg:tracking-tighter">
                 YOUR LAPTOP <br className="hidden lg:block" /> ISN&rsquo;T <span className="text-slate-400 line-through decoration-blue-500 decoration-4">DEAD.</span>
               </h1>
             </motion.div>
@@ -196,7 +198,7 @@ export default function CinematicHero() {
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
               className="absolute inset-0 flex items-center justify-center px-4 text-center pointer-events-none"
             >
-              <h1 className="max-w-[17ch] text-balance text-[clamp(2.5rem,8.5vw,5.5rem)] font-black uppercase leading-[0.95] tracking-tight text-slate-900 drop-shadow-sm sm:leading-[0.9] lg:max-w-none lg:tracking-tighter">
+              <h1 className="max-w-[17ch] text-balance text-[clamp(1.8rem,8.5vw,5.5rem)] sm:text-[clamp(2.5rem,8.5vw,5.5rem)] font-black uppercase leading-[0.95] tracking-tight text-slate-900 drop-shadow-sm sm:leading-[0.9] lg:max-w-none lg:tracking-tighter">
                 IT JUST NEEDS <br />
                 <motion.span
                   animate={reduced ? {} : { backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
@@ -221,19 +223,19 @@ export default function CinematicHero() {
                 initial={{ x: "15vw" }}
                 animate={{ x: "0vw" }}
                 transition={{ delay: 2.4, duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-                className="pointer-events-none relative z-10 flex w-full max-w-7xl flex-col items-start justify-center"
+                className="pointer-events-none relative z-10 flex w-full max-w-7xl flex-col items-start justify-center sm:pl-[2%] lg:pl-[4%]"
               >
                 
                 {/* ANIMATED LINE DRAWING: LUCKY */}
                 <motion.div style={{ x: giantTextX, y: giantTextY }} className="flex w-full justify-start">
-                  <svg viewBox="0 0 1200 220" className="w-full max-h-[25vh] sm:max-h-[30vh]">
+                  <svg viewBox="0 0 1200 180" className="w-full h-auto sm:max-h-[20vh] lg:max-h-[25vh]">
                     <motion.text
                       x="2%"
                       y="55%"
                       textAnchor="start"
                       dominantBaseline="central"
                       className="font-black uppercase tracking-tighter"
-                      style={{ fontSize: "190px" }}
+                      style={{ fontSize: "140px" }}
                       initial={{ 
                         strokeDasharray: 2500, 
                         strokeDashoffset: 2500, 
@@ -255,12 +257,12 @@ export default function CinematicHero() {
                   </svg>
                 </motion.div>
 
-                {/* HANDWRITTEN ACCENT NOTE */}
+                {/* HANDWRITTEN ACCENT NOTE (Responsive scaling for mobile) */}
                 <motion.div
                   initial={{ opacity: 0, y: -8, rotate: -10 }}
                   animate={{ opacity: 1, y: 0, rotate: -6 }}
                   transition={{ delay: 2.7, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-                  className="pointer-events-none absolute right-[6%] top-[6%] z-20 hidden sm:block lg:right-[10%] lg:top-[10%]"
+                  className="pointer-events-none absolute right-[2%] -top-4 z-20 flex origin-top-right scale-[0.6] flex-col items-end sm:-top-0 sm:right-[10%] sm:top-[10%] sm:scale-100 lg:right-[10%]"
                 >
                   <p
                     className="whitespace-nowrap text-[clamp(1.25rem,2.6vw,2rem)] text-blue-600"
@@ -282,32 +284,32 @@ export default function CinematicHero() {
                 </motion.div>
 
                 {/* FOREGROUND SOLID TEXT: COMPUTERS */}
-                <div className="flex w-full justify-start mt-1 sm:mt-2 pl-[15%] lg:pl-[14%]">
+                <div className="mt-1 flex w-full justify-start pl-[4%] sm:mt-2 sm:pl-[15%] lg:pl-[14%]">
                   <motion.h2
                     initial={{ opacity: 0, y: 40 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1.2, delay: 1.5, ease: [0.16, 1, 0.3, 1] }}
-                    className="text-[clamp(4.5rem,10.5vw,12rem)] font-black uppercase leading-[0.85] tracking-tight text-slate-900 drop-shadow-xl sm:tracking-tighter"
+                    className="text-[clamp(2.2rem,11vw,9rem)] sm:text-[clamp(3rem,8vw,9rem)] font-black uppercase leading-[0.85] tracking-tight text-slate-900 drop-shadow-xl sm:tracking-tighter"
                   >
                     Computers
                   </motion.h2>
                 </div>
 
-                {/* BOTTOM ROW: CTA BUTTON (left) & 2-ROW DOODLE TEXT (right) */}
-                <div className="mt-10 flex w-full items-end justify-between gap-6 pl-[15%] pr-[6%] lg:pl-[14%] lg:pr-[10%]">
+                {/* BOTTOM ROW: CTA BUTTON & 2-ROW DOODLE TEXT */}
+                <div className="mt-6 flex w-full flex-col items-start justify-between gap-6 pl-[4%] pr-[4%] sm:mt-10 sm:flex-row sm:items-end sm:gap-6 sm:pl-[15%] sm:pr-[6%] lg:pl-[14%] lg:pr-[10%]">
 
                   {/* CALL TO ACTION BUTTON */}
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 1, delay: 3.2, ease: [0.16, 1, 0.3, 1] }}
-                    className="pointer-events-auto shrink-0"
+                    className="pointer-events-auto shrink-0 w-full sm:w-auto"
                   >
                     <a
                       href="https://www.google.com/maps/place/Lucky+Computers/@17.4848963,78.3941357,14z/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group relative flex h-14 w-[240px] items-center justify-between overflow-hidden rounded-full bg-slate-900 px-6 text-sm font-bold uppercase tracking-widest text-white transition-all duration-300 hover:bg-blue-600 hover:shadow-[0_8px_30px_rgba(37,99,235,0.4)] active:scale-95"
+                      className="group relative flex h-14 w-full max-w-[280px] sm:w-[240px] items-center justify-between overflow-hidden rounded-full bg-slate-900 px-6 text-sm font-bold uppercase tracking-widest text-white transition-all duration-300 hover:bg-blue-600 hover:shadow-[0_8px_30px_rgba(37,99,235,0.4)] active:scale-95"
                     >
                       <span className="relative z-10">Get Directions</span>
                       <div className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/20 transition-transform duration-300 group-hover:rotate-45">
@@ -318,15 +320,15 @@ export default function CinematicHero() {
                     </a>
                   </motion.div>
 
-                  {/* RIGHT-SIDE DESCRIPTION (Doodler type, pitch black, stacked in 2 rows) */}
+                  {/* DESCRIPTION (Doodler type, pitch black, stacked in 2 rows on desktop, flows on mobile) */}
                   <motion.p
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.9, delay: 3.4, ease: [0.16, 1, 0.3, 1] }}
-                    className="hidden text-right text-[clamp(1.2rem,1.8vw,1.6rem)] font-bold leading-snug text-black sm:block"
+                    className="text-left text-[clamp(1rem,4.5vw,1.6rem)] sm:text-[clamp(1.1rem,1.8vw,1.6rem)] font-bold leading-snug text-black sm:text-right"
                     style={{ fontFamily: "'Caveat', cursive" }}
                   >
-                    Expert repair &amp; upgrades for laptops and desktops — screens, batteries,<br />
+                    Expert repair &amp; upgrades for laptops and desktops — screens, batteries,<br className="hidden sm:block" />
                     data recovery, and more, backed by honest pricing.
                   </motion.p>
 

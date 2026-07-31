@@ -1,10 +1,12 @@
-import { useState, useEffect, useRef } from 'react';
-import { ShieldCheck, CheckCircle2, Wallet } from 'lucide-react';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
-import 'react-lazy-load-image-component/src/effects/blur.css';
+"use client";
+
+import { useRef } from 'react';
+import { motion, useInView, type Variants } from 'framer-motion';
+import { Wallet, ShieldCheck, ArrowRight } from 'lucide-react';
 
 interface BrandInventory {
-  name: string;
+  id: string;
+  brand: string;
   lineup: string;
   desc: string;
   img: string;
@@ -12,143 +14,183 @@ interface BrandInventory {
   badge: string;
 }
 
-export default function FeaturedLaptops() {
-  const [isVisible, setIsVisible] = useState(false);
+const INVENTORY: BrandInventory[] = [
+  {
+    id: 'apple',
+    brand: 'Apple',
+    lineup: 'MacBook Pro & Air',
+    desc: 'Unmatched silicon power and silent efficiency. Fully restored.',
+    img: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=800',
+    badge: 'Creator Choice',
+    gridClass: 'md:col-span-2 md:row-span-1 min-h-[160px] md:min-h-[190px]', 
+  },
+  {
+    id: 'lenovo',
+    brand: 'Lenovo',
+    lineup: 'ThinkPad Series',
+    desc: 'Legendary durability and spill-resistant keyboards.',
+    img: 'https://images.unsplash.com/photo-1629131726692-1accd0c53ce0?auto=format&fit=crop&q=80&w=600',
+    badge: 'Business Class',
+    gridClass: 'md:col-span-1 md:row-span-1 min-h-[160px] md:min-h-[190px]', 
+  },
+  {
+    id: 'dell',
+    brand: 'Dell',
+    lineup: 'Latitude & XPS',
+    desc: 'Machined aluminum built for heavy multitasking.',
+    img: 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&q=80&w=600',
+    badge: 'Heavy Duty',
+    gridClass: 'md:col-span-1 md:row-span-1 min-h-[160px] md:min-h-[190px]', 
+  },
+  {
+    id: 'hp',
+    brand: 'HP',
+    lineup: 'EliteBook Series',
+    desc: 'Sleek, secure enterprise privacy in a lightweight body.',
+    img: 'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?auto=format&fit=crop&q=80&w=600',
+    badge: 'Secure Value',
+    gridClass: 'md:col-span-2 md:row-span-1 min-h-[160px] md:min-h-[190px]', 
+  }
+];
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 12 },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 120, damping: 20 } }
+};
+
+export default function PremiumInventory() {
   const sectionRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold: 0.15 }
-    );
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
-
-  const brands: BrandInventory[] = [
-    {
-      name: "Lenovo",
-      lineup: "ThinkPad Series",
-      desc: "The ultimate workhorse. Military-grade durability that lasts years. Maximum ROI for students & professionals.",
-      img: "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&q=80&w=800",
-      gridClass: "md:col-span-2 md:row-span-2",
-      badge: "Built Like a Tank",
-    },
-    {
-      name: "Dell",
-      lineup: "Latitude Series",
-      desc: "Reliable, easy to repair, and handles heavy daily multitasking effortlessly.",
-      img: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&q=80&w=800",
-      gridClass: "md:col-span-1 md:row-span-1",
-      badge: "Smart Value",
-    },
-    {
-      name: "HP",
-      lineup: "EliteBook & ProBook",
-      desc: "Sleek, fast, and sensible. Solid performance that delivers everyday excellence without the heavy price tag.",
-      img: "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?auto=format&fit=crop&q=80&w=1200",
-      gridClass: "md:col-span-1 md:row-span-1",
-      badge: "Everyday Choice",
-    },
-    {
-      name: "Apple",
-      lineup: "Refurbished MacBooks",
-      desc: "Experience the premium Apple ecosystem at a fraction of the showroom cost. Fully tested and restored.",
-      img: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=1200",
-      gridClass: "md:col-span-3 md:row-span-1",
-      badge: "Accessible Premium",
-    }
-  ];
+  const inView = useInView(sectionRef, { once: true, margin: '-50px' });
 
   return (
-    <section
-      id="inventory"
-      ref={sectionRef}
-      className="relative overflow-hidden bg-white px-4 py-10 lg:px-12"
+    <section 
+      ref={sectionRef} 
+      id="inventory" 
+      className="relative w-full overflow-hidden bg-gradient-to-b from-white via-blue-50/40 to-white pb-12 pt-4 sm:pb-16 sm:pt-6"
     >
-      {/* subtle grid (dark lines for the white bg) */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
-           style={{ backgroundImage: 'linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)', backgroundSize: '48px 48px' }}>
-      </div>
-
-      <div className="max-w-6xl mx-auto relative z-10">
-
-        {/* --- HEADER (text darkened for the white bg) --- */}
-        <div className={`flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 ${isVisible ? 'animate-in fade-in slide-in-from-bottom-6 duration-700' : 'opacity-0'}`}>
-          <div className="max-w-xl">
-            <div className="mb-2 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-blue-600">
-              <Wallet className="h-4 w-4" />
+      <div className="relative z-10 mx-auto max-w-6xl px-5 sm:px-8">
+        
+        {/* ================= COMPACT HEADER ================= */}
+        <div className="mb-8 flex flex-col items-start gap-3">
+          <motion.div
+            initial={{ opacity: 0, x: -15 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
+            <div className="mb-1.5 flex items-center gap-1.5 text-[9px] font-black uppercase tracking-[0.2em] text-blue-600">
+              <Wallet className="h-3.5 w-3.5" /> 
               <span>Smart Investments</span>
             </div>
-            <h2 className="text-2xl lg:text-4xl font-black tracking-tighter text-slate-900 uppercase leading-tight">
-              Enterprise Grade. <br />
-              <span className="text-transparent" style={{ WebkitTextStroke: '1px #2563eb' }}>
-                Unmatched Value.
-              </span>
+            <h2 className="text-2xl font-black uppercase leading-none tracking-tight text-slate-900 sm:text-3xl md:text-4xl">
+              Enterprise Grade<span className="text-blue-600">.</span>
             </h2>
-          </div>
+          </motion.div>
 
-          <div className="md:max-w-xs text-slate-500 font-medium text-xs border-l-2 border-slate-300 pl-3 py-0.5">
-            Why pay showroom markups? Get flagship reliability and performance without the premium price tag. Fully refurbished, rigorously tested, and built to last.
-          </div>
+          <motion.p 
+            initial={{ opacity: 0, x: -15 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
+            className="max-w-xl text-xs sm:text-sm font-bold leading-relaxed text-black"
+          >
+            Get flagship reliability and performance without the showroom markup. Our rotating inventory is fully refurbished, rigorously tested, and built to last.
+          </motion.p>
         </div>
 
-        {/* --- BENTO GRID (cards unchanged — dark tiles on white) --- */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 auto-rows-[minmax(160px,auto)] lg:auto-rows-[180px]">
-          {brands.map((brand, idx) => (
-            <div
-              key={idx}
-              className={`group relative overflow-hidden bg-slate-900 border border-slate-800 rounded-lg transition-all duration-500 hover:border-blue-500/50 hover:shadow-[0_0_30px_rgba(37,99,235,0.15)] flex flex-col justify-end ${brand.gridClass} ${isVisible ? 'animate-in fade-in slide-in-from-bottom-8 duration-700' : 'opacity-0'}`}
-              style={{ animationFillMode: 'both', animationDelay: `${idx * 150}ms` }}
+        {/* ================= COMPACT BENTO GRID ================= */}
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          animate={inView ? "show" : "hidden"}
+          className="grid grid-cols-1 gap-3 md:grid-cols-3 md:gap-3 lg:gap-4"
+        >
+          {INVENTORY.map((laptop) => (
+            <motion.div 
+              key={laptop.id}
+              variants={itemVariants}
+              className={`group relative flex flex-col justify-end overflow-hidden rounded-xl bg-slate-900 ${laptop.gridClass} shadow-sm`}
             >
-              <LazyLoadImage
-                src={brand.img}
-                alt={`${brand.name} Refurbished`}
-                effect="blur"
-                className="absolute inset-0 h-full w-full object-cover grayscale opacity-40 transition-all duration-700 ease-out group-hover:scale-105 group-hover:grayscale-0 group-hover:opacity-70"
-                wrapperClassName="absolute inset-0 h-full w-full"
-                threshold={200}
+              <img 
+                src={laptop.img} 
+                alt={`${laptop.brand} ${laptop.lineup}`}
+                loading="lazy"
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               />
+              
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-100" />
+              <div className="absolute inset-0 bg-blue-900/10 mix-blend-overlay transition-opacity duration-500 group-hover:opacity-0" />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent transition-opacity duration-500 group-hover:opacity-90" />
-
-              <div className="relative z-20 p-4 flex flex-col h-full justify-between">
-                <div className="flex justify-between items-start">
-                  <div className="inline-flex items-center gap-1 bg-slate-950/80 backdrop-blur-sm border border-slate-700/50 px-2 py-1 rounded text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-slate-300">
-                    <ShieldCheck className="w-3 h-3 text-blue-500" />
-                    {brand.badge}
+              <div className="relative z-20 flex h-full flex-col justify-between p-4 sm:p-5">
+                
+                <div className="flex items-start justify-between">
+                  <div className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2.5 py-1 text-[8px] font-black uppercase tracking-widest text-white backdrop-blur-md ring-1 ring-white/20">
+                    <ShieldCheck className="h-3 w-3 text-blue-400" />
+                    {laptop.badge}
                   </div>
                 </div>
 
-                <div className="transform transition-transform duration-500 translate-y-1 group-hover:translate-y-0">
-                  <h4 className="text-blue-500 font-bold text-[9px] sm:text-[10px] uppercase tracking-widest mb-0.5">
-                    {brand.name}
-                  </h4>
-                  <h3 className={`font-black uppercase tracking-tight text-white mb-1 leading-none ${brand.gridClass.includes('row-span-2') ? 'text-lg lg:text-2xl' : 'text-base lg:text-lg'}`}>
-                    {brand.lineup}
+                <div className="mt-4 transition-transform duration-500 ease-out sm:translate-y-3 sm:group-hover:translate-y-0">
+                  <span className="text-[9px] font-black uppercase tracking-[0.2em] text-blue-400">
+                    {laptop.brand}
+                  </span>
+                  <h3 className="mt-0.5 text-lg font-black uppercase tracking-tight text-white sm:text-xl">
+                    {laptop.lineup}
                   </h3>
-
-                  <div className="opacity-0 h-0 overflow-hidden transition-all duration-500 ease-out group-hover:opacity-100 group-hover:h-auto mt-1">
-                    <p className="text-[10px] sm:text-xs font-medium text-slate-300 leading-snug max-w-[90%] mb-2">
-                      {brand.desc}
-                    </p>
-                    <div className="flex items-center gap-1 text-white text-[9px] font-bold uppercase tracking-wider">
-                      <CheckCircle2 className="w-3 h-3 text-green-500" />
-                      In Stock
+                  
+                  <div className="grid grid-rows-[0fr] opacity-0 transition-all duration-500 ease-out sm:group-hover:grid-rows-[1fr] sm:group-hover:opacity-100 sm:group-hover:mt-1.5">
+                    <div className="overflow-hidden">
+                      <p className="max-w-[90%] text-[11px] font-medium leading-snug text-slate-300">
+                        {laptop.desc}
+                      </p>
                     </div>
                   </div>
+
+                  <p className="mt-1.5 max-w-[95%] text-[11px] font-medium leading-snug text-slate-300 sm:hidden">
+                    {laptop.desc}
+                  </p>
                 </div>
+                
               </div>
 
-              <div className="absolute bottom-0 left-0 h-0.5 w-0 bg-blue-500 transition-all duration-700 ease-out group-hover:w-full z-30" />
-            </div>
+              <div className="pointer-events-none absolute inset-0 rounded-xl border border-white/0 transition-colors duration-500 group-hover:border-white/20" />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
+
+        {/* ================= COMPACT INQUIRY CTA ================= */}
+        <motion.div 
+          initial={{ opacity: 0, y: 12 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="mx-auto mt-6 flex w-full flex-col items-center justify-between gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:px-6"
+        >
+          <div className="flex items-center gap-3 text-center sm:text-left">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+              </span>
+            </div>
+            <div>
+              <h4 className="text-xs font-black tracking-tight text-slate-900">Inventory constantly rotating.</h4>
+              <p className="text-[9px] font-bold uppercase tracking-wider text-slate-500">Message us for today's available stock.</p>
+            </div>
+          </div>
+          
+          <a 
+            href={`https://wa.me/919999999999?text=Hi,%20I'm%20looking%20for%20a%20refurbished%20laptop.`}
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="group flex w-full shrink-0 items-center justify-center gap-1.5 rounded-lg bg-slate-900 px-5 py-2.5 text-[11px] font-bold uppercase tracking-widest text-white transition-colors hover:bg-blue-600 sm:w-auto"
+          >
+            Check Availability
+            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+          </a>
+        </motion.div>
 
       </div>
     </section>
