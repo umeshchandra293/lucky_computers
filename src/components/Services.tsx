@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef } from 'react';
-import { motion, useInView, type Variants } from 'framer-motion';
+import { useRef, useState } from 'react';
+import { motion, useInView, AnimatePresence, type Variants } from 'framer-motion';
 import { 
   Cpu, 
   HardDrive, 
@@ -11,7 +11,8 @@ import {
   MonitorPlay, 
   Settings, 
   Laptop,
-  ArrowRight
+  ArrowRight,
+  ChevronDown
 } from 'lucide-react';
 
 /* ============================================================
@@ -76,7 +77,8 @@ const SERVICES = [
   }
 ];
 
-// Framer Motion Variants for staggered entry
+const MOBILE_INITIAL_COUNT = 3;
+
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   show: {
@@ -94,19 +96,58 @@ const itemVariants: Variants = {
   }
 };
 
+/* ============================================================
+   SERVICE CARD
+   ============================================================ */
+function ServiceCard({ service }: { service: typeof SERVICES[number] }) {
+  return (
+    <motion.div
+      variants={itemVariants}
+      whileHover={{ y: -6 }}
+      className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all hover:border-blue-300 hover:shadow-xl hover:shadow-blue-900/10"
+    >
+      <div className="relative h-36 w-full overflow-hidden bg-slate-100 sm:h-40">
+        <img 
+          src={service.img} 
+          alt={service.title}
+          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+        />
+        <div className="absolute bottom-3 left-4 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white shadow-md ring-1 ring-black/5 transition-transform duration-300 group-hover:-translate-y-1">
+          <service.icon className="h-5 w-5" strokeWidth={2} />
+        </div>
+      </div>
+      <div className="flex flex-1 flex-col justify-between p-5">
+        <div>
+          <h3 className="mb-2 text-sm font-black uppercase tracking-tight text-slate-900">
+            {service.title}
+          </h3>
+          <p className="text-xs font-medium leading-relaxed text-slate-500">
+            {service.desc}
+          </p>
+        </div>
+        <div className="mt-5 flex items-center gap-2 opacity-0 transition-all duration-300 group-hover:opacity-100">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600">View Protocol</span>
+          <ArrowRight className="h-3 w-3 text-blue-600" />
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+/* ============================================================
+   MAIN COMPONENT
+   ============================================================ */
 export default function ServicesImageGrid() {
   const sectionRef = useRef<HTMLElement>(null);
   const inView = useInView(sectionRef, { once: true, margin: '-50px' });
+  const [showAll, setShowAll] = useState(false);
 
   return (
     <section 
       ref={sectionRef}
       id="services" 
-      // Reduced top padding (pt-8 sm:pt-10) to close the gap with the hero section
       className="w-full bg-gradient-to-b from-blue-50 via-white to-blue-50/50 pb-16 pt-8 sm:pb-24 sm:pt-10"
     >
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap');`}</style>
-      
       <div className="mx-auto max-w-7xl px-6 sm:px-8">
         
         {/* HEADER */}
@@ -131,62 +172,78 @@ export default function ServicesImageGrid() {
             initial={{ opacity: 0, x: 20 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-            // Shifted slightly left (md:mr-12 lg:mr-24) and updated to doodle style
-            className="max-w-md text-[clamp(1.2rem,2vw,1.5rem)] font-bold leading-snug text-slate-700 md:mr-12 md:text-left lg:mr-24"
-            style={{ fontFamily: "'Caveat', cursive" }}
+            className="max-w-md text-sm font-medium leading-relaxed text-slate-600 md:mr-12 md:text-left lg:mr-24"
           >
             Forget generic repairs. We operate a precision technical bench designed to salvage, restore, and upgrade hardware at the highest level.
           </motion.p>
         </div>
 
-        {/* IMAGE CARD GRID */}
+        {/* ===== DESKTOP GRID: always show all 8 ===== */}
         <motion.div 
           variants={containerVariants}
           initial="hidden"
           animate={inView ? "show" : "hidden"}
-          className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6"
+          className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6"
         >
           {SERVICES.map((service) => (
-            <motion.div
-              key={service.id}
-              variants={itemVariants}
-              whileHover={{ y: -6 }}
-              className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all hover:border-blue-300 hover:shadow-xl hover:shadow-blue-900/10"
-            >
-              {/* Card Image Header - Clear and Unfiltered */}
-              <div className="relative h-36 w-full overflow-hidden bg-slate-100 sm:h-40">
-                <img 
-                  src={service.img} 
-                  alt={service.title}
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                
-                {/* Floating Icon with a subtle ring to pop against bright images */}
-                <div className="absolute bottom-3 left-4 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white shadow-md ring-1 ring-black/5 transition-transform duration-300 group-hover:-translate-y-1">
-                  <service.icon className="h-5 w-5" strokeWidth={2} />
-                </div>
-              </div>
-
-              {/* Card Body */}
-              <div className="flex flex-1 flex-col justify-between p-5">
-                <div>
-                  <h3 className="mb-2 text-sm font-black uppercase tracking-tight text-slate-900">
-                    {service.title}
-                  </h3>
-                  <p className="text-xs font-medium leading-relaxed text-slate-500">
-                    {service.desc}
-                  </p>
-                </div>
-
-                {/* Hover Arrow */}
-                <div className="mt-5 flex items-center gap-2 opacity-0 transition-all duration-300 group-hover:opacity-100">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600">View Protocol</span>
-                  <ArrowRight className="h-3 w-3 text-blue-600" />
-                </div>
-              </div>
-            </motion.div>
+            <ServiceCard key={service.id} service={service} />
           ))}
         </motion.div>
+
+        {/* ===== MOBILE GRID: show 3 initially, rest on expand ===== */}
+        <div className="sm:hidden">
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            animate={inView ? "show" : "hidden"}
+            className="grid grid-cols-1 gap-5"
+          >
+            {SERVICES.slice(0, MOBILE_INITIAL_COUNT).map((service) => (
+              <ServiceCard key={service.id} service={service} />
+            ))}
+          </motion.div>
+
+          <AnimatePresence>
+            {showAll && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                className="grid grid-cols-1 gap-5 overflow-hidden pt-5"
+              >
+                {SERVICES.slice(MOBILE_INITIAL_COUNT).map((service, i) => (
+                  <motion.div
+                    key={service.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.08, duration: 0.4, ease: 'easeOut' }}
+                  >
+                    <ServiceCard service={service} />
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* VIEW MORE / VIEW LESS BUTTON */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={inView ? { opacity: 1 } : {}}
+            transition={{ delay: 0.5 }}
+            className="mt-6 flex justify-center"
+          >
+            <button
+              onClick={() => setShowAll((prev) => !prev)}
+              className="group flex items-center gap-2 rounded-full border border-slate-300 bg-white px-6 py-3 text-xs font-bold uppercase tracking-widest text-slate-900 shadow-sm transition-all duration-300 hover:border-blue-400 hover:bg-blue-600 hover:text-white hover:shadow-lg active:scale-95"
+            >
+              <span>{showAll ? 'Show Less' : 'View More'}</span>
+              <ChevronDown 
+                className={`h-3.5 w-3.5 transition-transform duration-300 ${showAll ? 'rotate-180' : ''}`} 
+              />
+            </button>
+          </motion.div>
+        </div>
 
       </div>
     </section>

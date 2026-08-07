@@ -1,134 +1,201 @@
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
-import { Cpu, Lock, BadgeCheck, ArrowRight, Server } from 'lucide-react';
+import { useRef } from 'react';
+import { motion, useInView, type Variants } from 'framer-motion';
+import {
+  Server,
+  Shield,
+  Star,
+  BadgeCheck,
+  Cpu,
+  Lock,
+  Users,
+  Zap,
+  ArrowRight,
+  type LucideIcon,
+} from 'lucide-react';
 
-export default function WhyUs() {
-  // --- Scroll Trigger Animation State ---
-  const [isVisible, setIsVisible] = useState(false);
+/* ============================================================
+   DATA
+   One list, one voice — replaces the overlapping "why us" copy
+   that used to live in three separate sections.
+   ============================================================ */
+interface Reason {
+  icon: LucideIcon;
+  title: string;
+  desc: string;
+}
+
+const REASONS: Reason[] = [
+  {
+    icon: BadgeCheck,
+    title: 'Trusted Experts',
+    desc: 'Certified technicians with deep knowledge of board-level diagnostics and complex IT infrastructure.',
+  },
+  {
+    icon: Cpu,
+    title: 'Quality Repairs',
+    desc: 'Strictly vetted OEM components and rigorous stress-testing on every repair before handover.',
+  },
+  {
+    icon: Lock,
+    title: 'Data Security',
+    desc: 'Military-grade secure protocols protect your sensitive files throughout the repair process.',
+  },
+  {
+    icon: Zap,
+    title: 'Fast Turnaround',
+    desc: 'Downtime costs you money and peace of mind — most repairs are diagnosed and quoted same day.',
+  },
+  {
+    icon: Users,
+    title: 'Transparent Pricing',
+    desc: 'No surprise fees. We diagnose openly, quote upfront, and explain every line before we touch a screw.',
+  },
+];
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.08 } },
+};
+
+const rowVariants: Variants = {
+  hidden: { opacity: 0, y: 14 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
+};
+
+/* ============================================================
+   COMPONENT
+   ============================================================ */
+export default function WhyChooseUs() {
   const sectionRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold: 0.15 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  const features = [
-    {
-      num: "01",
-      icon: BadgeCheck,
-      title: "Trusted Experts",
-      desc: "Experienced technicians with certified knowledge in complex IT infrastructure and board-level diagnostics."
-    },
-    {
-      num: "02",
-      icon: Cpu,
-      title: "Quality Repairs",
-      desc: "We use strictly vetted OEM components and subject all repairs to rigorous stress-testing before handover."
-    },
-    {
-      num: "03",
-      icon: Lock,
-      title: "Data Security",
-      desc: "Your privacy is absolute. We employ military-grade secure protocols to protect your sensitive files."
-    }
-  ];
+  const inView = useInView(sectionRef, { once: true, margin: '-60px' });
 
   return (
-    <section 
-      id="why-us" 
+    <section
       ref={sectionRef}
-      // Compact, reduced padding with the clean white-and-blue gradient background, grids removed
-      className="relative w-full overflow-hidden bg-gradient-to-b from-white via-blue-50/40 to-white py-12 sm:py-16 px-5 sm:px-8 border-t border-slate-100"
+      id="why-us"
+      className="relative w-full overflow-hidden bg-gradient-to-b from-white via-blue-50/40 to-white pt-4 pb-16 sm:pt-6 sm:pb-20 px-5 sm:px-8"
     >
-      <div className="max-w-6xl mx-auto relative z-10">
-        
-        {/* --- HEADER: COMPACT & TECHNICAL --- */}
-        <div className={`flex flex-col md:flex-row md:items-end justify-between mb-8 gap-6 ${isVisible ? 'animate-in fade-in slide-in-from-bottom-6 duration-700' : 'opacity-0'}`}>
+      {/* Ambient glow — consistent with site-wide background language */}
+      <div className="pointer-events-none absolute inset-0 z-0">
+        <div className="absolute right-[-10%] top-[10%] h-[40vw] w-[40vw] max-h-[420px] max-w-[420px] rounded-full bg-blue-400/15 blur-[110px]" />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-6xl">
+
+        {/* ================= HEADER ================= */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 sm:mb-14"
+        >
           <div>
             <div className="mb-2 flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.2em] text-blue-600">
               <Server className="h-3.5 w-3.5" />
               <span>The Lucky Standard</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tighter uppercase leading-none text-slate-900">
-              Why Choose <br />
-              <span className="text-blue-600">
-                Our Services
-              </span>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black uppercase tracking-tighter leading-none text-slate-900">
+              Why Choose <br className="sm:hidden" />
+              <span className="text-blue-600">Lucky Computers.</span>
             </h2>
           </div>
-          
-          <div className="max-w-md pb-0.5 border-l-2 border-blue-200 pl-3">
-            <p className="text-xs text-slate-600 font-medium leading-relaxed">
-              We don't just fix devices; we engineer reliability with the most trusted and transparent technical solutions in Hyderabad.
-            </p>
-          </div>
-        </div>
 
-        {/* --- COMPACT SERVER BLADE LAYOUT --- */}
-        <div className="flex flex-col border-t border-slate-200">
-          {features.map((feature, idx) => (
-            <div 
-              key={idx} 
-              className={`group relative flex flex-col md:flex-row items-start md:items-center py-4 lg:py-5 border-b border-slate-200 transition-all duration-300 hover:bg-white/80 hover:shadow-sm cursor-default overflow-hidden ${isVisible ? 'animate-in fade-in slide-in-from-bottom-8 duration-700 md:animate-none' : 'opacity-0'}`}
-              style={isVisible ? { animationFillMode: 'both', animationDelay: `${idx * 150}ms` } : {}}
-            >
-              {/* Left Hover Accent Wire */}
-              <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-600 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top shadow-[0_0_10px_rgba(37,99,235,0.4)]" />
+          <p className="max-w-md border-l-2 border-blue-200 pl-3 text-sm font-medium leading-relaxed text-slate-600">
+            We don&rsquo;t just fix devices, We engineer reliability, backed by honest pricing and long-term relationships with every customer.
+          </p>
+        </motion.div>
 
-              {/* Grid Layout for Row Content */}
-              <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-4 items-center px-3 lg:px-6 transform transition-transform duration-300 group-hover:translate-x-1.5">
-                
-                {/* Number & Icon (Cols 1-4) */}
-                <div className="md:col-span-4 flex items-center gap-4">
-                  <span className="text-2xl lg:text-3xl font-black text-slate-300 transition-colors duration-300 group-hover:text-blue-600">
-                    {feature.num}
-                  </span>
-                  
-                  <div className="h-9 w-9 bg-blue-50 flex items-center justify-center border border-blue-100 transition-all duration-300 group-hover:border-blue-500 group-hover:bg-blue-600 shrink-0 shadow-sm rounded-lg">
-                    <feature.icon className="h-4 w-4 text-blue-600 transition-colors duration-300 group-hover:text-white" />
-                  </div>
-                </div>
+        {/* ================= MAIN LAYOUT: TRUST PANEL + REASON LIST ================= */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-5">
 
-                {/* Title (Cols 5-7) */}
-                <div className="md:col-span-3">
-                  <h3 className="text-sm lg:text-base font-black uppercase tracking-tight text-slate-900">
-                    {feature.title}
-                  </h3>
-                </div>
-
-                {/* Description & Action (Cols 8-12) */}
-                <div className="md:col-span-5 flex items-center justify-between gap-4">
-                  <p className="text-[11px] text-slate-500 font-medium leading-relaxed transition-colors duration-300 group-hover:text-slate-700 max-w-sm">
-                    {feature.desc}
-                  </p>
-                  
-                  <div className="hidden lg:flex items-center justify-center w-7 h-7 rounded-full bg-slate-100 border border-slate-200 transition-all duration-300 group-hover:border-blue-600 group-hover:bg-blue-600 shrink-0 overflow-hidden">
-                    <ArrowRight className="h-3 w-3 text-slate-400 transform -translate-x-4 transition-all duration-300 group-hover:translate-x-0 group-hover:text-white" />
-                  </div>
-                </div>
-
-              </div>
-
-              {/* Bottom scanline effect on hover */}
-              <div className="absolute bottom-0 left-0 h-px w-0 bg-gradient-to-r from-blue-600 to-transparent transition-all duration-500 ease-out group-hover:w-full" />
+          {/* ---------- LEFT: DARK TRUST PANEL (signature element) ---------- */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-slate-800/50 bg-slate-950 p-6 text-white shadow-xl lg:col-span-4 lg:p-8"
+          >
+            {/* Faded shield watermark */}
+            <div className="absolute -right-12 -top-12 opacity-[0.04] transition-transform duration-700 group-hover:scale-110">
+              <Shield className="h-64 w-64" />
             </div>
-          ))}
-        </div>
 
+            <div className="relative z-10">
+              <div className="mb-4 flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
+                <span className="text-[10px] font-bold uppercase tracking-widest text-blue-500">The Lucky Promise</span>
+              </div>
+              <h3 className="mb-4 text-2xl font-black uppercase leading-[0.95] tracking-tighter lg:text-3xl">
+                Built on Trust.{' '}
+                <span className="text-slate-500">Engineered for Performance.</span>
+              </h3>
+              <p className="text-sm font-medium leading-relaxed text-slate-400">
+                Your devices hold your digital life — we treat every repair with the respect that demands, backed by transparent pricing from quote to handover.
+              </p>
+            </div>
+
+            <div className="relative z-10 mt-8 flex items-center gap-4 border-t border-slate-800 pt-6">
+              <div className="flex gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-4 w-4 fill-blue-500 text-blue-500" />
+                ))}
+              </div>
+              <div>
+                <p className="text-xs font-black uppercase tracking-wider text-white">10,000+ Repairs</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Trusted in Hyderabad</p>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* ---------- RIGHT: REASON ROWS (scannable, single numbering system) ---------- */}
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate={inView ? 'show' : 'hidden'}
+            className="flex flex-col rounded-2xl border border-slate-200 bg-white shadow-sm lg:col-span-8"
+          >
+            {REASONS.map((reason, idx) => (
+              <motion.div
+                key={reason.title}
+                variants={rowVariants}
+                className={`group relative flex items-start gap-4 overflow-hidden px-4 py-4 transition-colors duration-300 hover:bg-blue-50/40 sm:items-center sm:px-6 sm:py-5 ${
+                  idx !== REASONS.length - 1 ? 'border-b border-slate-100' : ''
+                }`}
+              >
+                {/* Left hover accent wire */}
+                <div className="absolute left-0 top-0 bottom-0 w-1 origin-top scale-y-0 bg-blue-600 shadow-[0_0_10px_rgba(37,99,235,0.4)] transition-transform duration-300 group-hover:scale-y-100" />
+
+                {/* Index */}
+                <span className="w-6 shrink-0 text-right text-sm font-black tabular-nums text-slate-300 transition-colors duration-300 group-hover:text-blue-600 sm:w-8 sm:text-base">
+                  {String(idx + 1).padStart(2, '0')}
+                </span>
+
+                {/* Icon */}
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-blue-100 bg-blue-50 transition-all duration-300 group-hover:border-blue-500 group-hover:bg-blue-600">
+                  <reason.icon className="h-4 w-4 text-blue-600 transition-colors duration-300 group-hover:text-white" strokeWidth={2} />
+                </div>
+
+                {/* Title + desc */}
+                <div className="min-w-0 flex-1">
+                  <h4 className="text-sm font-black uppercase tracking-tight text-slate-900 sm:text-[15px]">
+                    {reason.title}
+                  </h4>
+                  <p className="mt-0.5 text-[11px] font-medium leading-relaxed text-slate-500 transition-colors duration-300 group-hover:text-slate-700 sm:text-xs sm:max-w-md">
+                    {reason.desc}
+                  </p>
+                </div>
+
+                {/* Arrow affordance */}
+                <div className="hidden h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full border border-slate-200 bg-slate-100 transition-all duration-300 group-hover:border-blue-600 group-hover:bg-blue-600 lg:flex">
+                  <ArrowRight className="h-3 w-3 -translate-x-4 text-slate-400 transition-all duration-300 group-hover:translate-x-0 group-hover:text-white" />
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+
+        </div>
       </div>
     </section>
   );

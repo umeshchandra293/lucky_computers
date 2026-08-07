@@ -22,6 +22,15 @@ const HERO_IMAGE_URL =
   'https://images.unsplash.com/photo-1721333089073-215a56fd710c?auto=format&fit=crop&w=1600&q=80';
 
 /* ============================================================
+   STATS
+   ============================================================ */
+const STATS = [
+  { v: '10,000+', l: 'Devices revived' },
+  { v: '95%', l: 'Same-day fixes' },
+  { v: '10+', l: 'Years in Hyderabad' },
+];
+
+/* ============================================================
    BACKGROUND AMBIENCE
    ============================================================ */
 
@@ -95,19 +104,17 @@ function ServiceImageBackdrop() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 2, ease: 'easeOut' }}
-      // Changed classes here: removed 'hidden lg:block' and added responsive widths starting from mobile
-      className="pointer-events-none absolute inset-y-0 right-0 z-0 w-[85%] sm:w-[70%] lg:w-[58%] xl:w-[52%]"
+      className="pointer-events-none absolute inset-y-0 right-0 z-0 w-[90%] sm:w-[75%] lg:w-[60%] xl:w-[55%]"
       style={{
-        maskImage: 'linear-gradient(to right, transparent 0%, black 38%, black 100%)',
-        WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 38%, black 100%)',
+        maskImage: 'linear-gradient(to right, transparent 0%, black 25%, black 100%)',
+        WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 25%, black 100%)',
       }}
     >
       <img
         src={HERO_IMAGE_URL}
         alt=""
         aria-hidden="true"
-        // Lowered opacity slightly on mobile so it doesn't overpower the text, restores on sm screens
-        className="h-full w-full object-cover object-center opacity-[0.12] sm:opacity-[0.16] grayscale-[15%]"
+        className="h-full w-full object-cover object-center opacity-[0.22] sm:opacity-[0.30] grayscale-[10%]"
         loading="eager"
       />
     </motion.div>
@@ -124,9 +131,9 @@ export default function CinematicHero() {
 
   useEffect(() => {
     if (reduced) return;
-    const t1 = setTimeout(() => setPhase(1), 1000); 
-    const t2 = setTimeout(() => setPhase(2), 3500); 
-    const t3 = setTimeout(() => setPhase(3), 6000); 
+    const t1 = setTimeout(() => setPhase(1), 400); 
+    const t2 = setTimeout(() => setPhase(2), 1500); 
+    const t3 = setTimeout(() => setPhase(3), 3000); 
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, [reduced]);
 
@@ -134,9 +141,6 @@ export default function CinematicHero() {
   const my = useMotionValue(0);
   const smx = useSpring(mx, { stiffness: 60, damping: 20 });
   const smy = useSpring(my, { stiffness: 60, damping: 20 });
-  
-  const giantTextX = useTransform(smx, (v) => v * -30);
-  const giantTextY = useTransform(smy, (v) => v * -30);
   
   const onMouseMove = (e: React.MouseEvent) => {
     const r = containerRef.current?.getBoundingClientRect();
@@ -152,8 +156,6 @@ export default function CinematicHero() {
       onMouseMove={onMouseMove}
       className="relative h-[100dvh] w-full overflow-hidden bg-[#f0f4f8] selection:bg-blue-600 selection:text-white"
     >
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap');`}</style>
-
       {/* Background Gradients */}
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-blue-400/20 blur-[120px]" />
@@ -216,123 +218,135 @@ export default function CinematicHero() {
           {phase === 3 && (
             <motion.div
               key="final"
-              className="relative flex h-full w-full flex-col items-start justify-center pt-8 overflow-hidden"
+              className="relative flex h-full w-full flex-col items-center sm:items-start justify-center pt-8 overflow-hidden"
             >
 
               <motion.div 
                 initial={{ x: "15vw" }}
                 animate={{ x: "0vw" }}
                 transition={{ delay: 2.4, duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-                className="pointer-events-none relative z-10 flex w-full max-w-7xl flex-col items-start justify-center sm:pl-[2%] lg:pl-[4%]"
+                className="pointer-events-none relative z-10 flex w-full max-w-7xl flex-col items-center sm:items-start justify-center pt-[4vh] sm:pt-[5vh] sm:pl-[2%] lg:pl-[4%]"
               >
                 
-                {/* ANIMATED LINE DRAWING: LUCKY */}
-                <motion.div style={{ x: giantTextX, y: giantTextY }} className="flex w-full justify-start">
-                  <svg viewBox="0 0 1200 180" className="w-full h-auto sm:max-h-[20vh] lg:max-h-[25vh]">
+                {/* LUCKY — mobile: centered */}
+                <div className="flex w-full justify-center sm:hidden">
+                  <svg viewBox="0 0 520 160" className="w-[88%] h-auto">
                     <motion.text
-                      x="2%"
-                      y="55%"
-                      textAnchor="start"
+                      x="50%"
+                      y="50%"
+                      textAnchor="middle"
                       dominantBaseline="central"
                       className="font-black uppercase tracking-tighter"
                       style={{ fontSize: "140px" }}
-                      initial={{ 
-                        strokeDasharray: 2500, 
-                        strokeDashoffset: 2500, 
-                        fill: "rgba(37, 99, 235, 0)" 
-                      }}
-                      animate={{ 
-                        strokeDashoffset: 0, 
-                        fill: "rgba(37, 99, 235, 1)" 
-                      }}
-                      transition={{
-                        strokeDashoffset: { duration: 2.8, ease: "easeInOut" },
-                        fill: { delay: 2.2, duration: 1, ease: "easeIn" }
-                      }}
+                      initial={{ strokeDasharray: 2500, strokeDashoffset: 2500, fill: "rgba(37, 99, 235, 0)" }}
+                      animate={{ strokeDashoffset: 0, fill: "rgba(37, 99, 235, 1)" }}
+                      transition={{ strokeDashoffset: { duration: 2.8, ease: "easeInOut" }, fill: { delay: 2.2, duration: 1, ease: "easeIn" } }}
                       stroke="#2563eb"
                       strokeWidth="3"
                     >
                       LUCKY
                     </motion.text>
                   </svg>
-                </motion.div>
-
-                {/* HANDWRITTEN ACCENT NOTE (Responsive scaling for mobile) */}
-                <motion.div
-                  initial={{ opacity: 0, y: -8, rotate: -10 }}
-                  animate={{ opacity: 1, y: 0, rotate: -6 }}
-                  transition={{ delay: 2.7, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-                  className="pointer-events-none absolute right-[2%] -top-4 z-20 flex origin-top-right scale-[0.6] flex-col items-end sm:-top-0 sm:right-[10%] sm:top-[10%] sm:scale-100 lg:right-[10%]"
-                >
-                  <p
-                    className="whitespace-nowrap text-[clamp(1.25rem,2.6vw,2rem)] text-blue-600"
-                    style={{ fontFamily: "'Caveat', cursive" }}
-                  >
-                    fast, honest &amp; reliable
-                  </p>
-                  <svg viewBox="0 0 160 40" className="mt-1 h-7 w-36 text-blue-500" fill="none">
-                    <motion.path
-                      d="M4 6 C 40 2, 70 32, 128 18 C 138 15, 148 18, 154 10"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      initial={{ pathLength: 0, opacity: 0 }}
-                      animate={{ pathLength: 1, opacity: 1 }}
-                      transition={{ delay: 3.1, duration: 1, ease: 'easeInOut' }}
-                    />
+                </div>
+                {/* LUCKY — desktop: left-aligned */}
+                <div className="hidden sm:flex w-full justify-start">
+                  <svg viewBox="0 0 1200 180" className="w-full h-auto sm:max-h-[20vh] lg:max-h-[25vh]">
+                    <motion.text
+                      x="0.5%"
+                      y="55%"
+                      textAnchor="start"
+                      dominantBaseline="central"
+                      className="font-black uppercase tracking-tighter"
+                      style={{ fontSize: "140px" }}
+                      initial={{ strokeDasharray: 2500, strokeDashoffset: 2500, fill: "rgba(37, 99, 235, 0)" }}
+                      animate={{ strokeDashoffset: 0, fill: "rgba(37, 99, 235, 1)" }}
+                      transition={{ strokeDashoffset: { duration: 2.8, ease: "easeInOut" }, fill: { delay: 2.2, duration: 1, ease: "easeIn" } }}
+                      stroke="#2563eb"
+                      strokeWidth="3"
+                    >
+                      LUCKY
+                    </motion.text>
                   </svg>
-                </motion.div>
+                </div>
 
                 {/* FOREGROUND SOLID TEXT: COMPUTERS */}
-                <div className="mt-1 flex w-full justify-start pl-[4%] sm:mt-2 sm:pl-[15%] lg:pl-[14%]">
+                <div className="mt-0 flex w-full justify-center sm:justify-start sm:mt-2 sm:pl-[1.5%] lg:pl-[1.2%]">
                   <motion.h2
                     initial={{ opacity: 0, y: 40 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1.2, delay: 1.5, ease: [0.16, 1, 0.3, 1] }}
-                    className="text-[clamp(2.2rem,11vw,9rem)] sm:text-[clamp(3rem,8vw,9rem)] font-black uppercase leading-[0.85] tracking-tight text-slate-900 drop-shadow-xl sm:tracking-tighter"
+                    className="text-[clamp(2.8rem,14vw,9rem)] sm:text-[clamp(3rem,8vw,9rem)] font-black uppercase leading-[0.85] tracking-tight text-slate-900 drop-shadow-xl sm:tracking-tighter"
                   >
                     Computers
                   </motion.h2>
                 </div>
 
-                {/* BOTTOM ROW: CTA BUTTON & 2-ROW DOODLE TEXT */}
-                <div className="mt-6 flex w-full flex-col items-start justify-between gap-6 pl-[4%] pr-[4%] sm:mt-10 sm:flex-row sm:items-end sm:gap-6 sm:pl-[15%] sm:pr-[6%] lg:pl-[14%] lg:pr-[10%]">
+                {/* BOTTOM ROW: CTA BUTTON then TAGLINE */}
+                <div className="mt-6 flex w-full flex-col items-center gap-5 px-4 sm:mt-10 sm:flex-row sm:items-center sm:gap-8 sm:px-0 sm:pl-[1.5%] sm:pr-[6%] lg:pl-[1.2%] lg:pr-[10%]">
 
                   {/* CALL TO ACTION BUTTON */}
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 1, delay: 3.2, ease: [0.16, 1, 0.3, 1] }}
-                    className="pointer-events-auto shrink-0 w-full sm:w-auto"
+                    className="pointer-events-auto shrink-0 w-auto"
                   >
                     <a
                       href="https://www.google.com/maps/place/Lucky+Computers/@17.4848963,78.3941357,14z/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group relative flex h-14 w-full max-w-[280px] sm:w-[240px] items-center justify-between overflow-hidden rounded-full bg-slate-900 px-6 text-sm font-bold uppercase tracking-widest text-white transition-all duration-300 hover:bg-blue-600 hover:shadow-[0_8px_30px_rgba(37,99,235,0.4)] active:scale-95"
+                      className="group relative flex h-11 w-[195px] items-center justify-between overflow-hidden rounded-full bg-slate-900 px-5 text-xs font-bold uppercase tracking-widest text-white transition-all duration-300 hover:bg-blue-600 hover:shadow-[0_8px_30px_rgba(37,99,235,0.4)] active:scale-95"
                     >
                       <span className="relative z-10">Get Directions</span>
-                      <div className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/20 transition-transform duration-300 group-hover:rotate-45">
-                        <svg className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <div className="relative z-10 flex h-6 w-6 items-center justify-center rounded-full bg-white/20 transition-transform duration-300 group-hover:rotate-45">
+                        <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
                       </div>
                     </a>
                   </motion.div>
 
-                  {/* DESCRIPTION (Doodler type, pitch black, stacked in 2 rows on desktop, flows on mobile) */}
-                  <motion.p
+                  {/* BRANDED TAGLINE */}
+                  <motion.div
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.9, delay: 3.4, ease: [0.16, 1, 0.3, 1] }}
-                    className="text-left text-[clamp(1rem,4.5vw,1.6rem)] sm:text-[clamp(1.1rem,1.8vw,1.6rem)] font-bold leading-snug text-black sm:text-right"
-                    style={{ fontFamily: "'Caveat', cursive" }}
+                    className="relative text-center sm:text-left"
                   >
-                    Expert repair &amp; upgrades for laptops and desktops — screens, batteries,<br className="hidden sm:block" />
-                    data recovery, and more, backed by honest pricing.
-                  </motion.p>
+                    {/* Decorative oversized quote mark */}
+                    <span
+                      aria-hidden="true"
+                      className="pointer-events-none absolute -top-5 left-1/2 -translate-x-1/2 sm:left-0 sm:translate-x-0 sm:-left-3 select-none font-black text-blue-600/20 leading-none"
+                      style={{ fontSize: 'clamp(3rem, 6vw, 5rem)' }}
+                    >
+                      &#x201C;
+                    </span>
+                    <p className="relative border-l-0 pl-0 sm:border-l-[3px] sm:border-blue-600/40 sm:pl-3 text-[clamp(0.78rem,3.2vw,0.95rem)] sm:text-[clamp(0.8rem,1.1vw,0.95rem)] font-bold leading-snug text-black">
+                      <span className="block">Expert repair &amp; upgrades for laptops and desktops, screens, batteries,</span>
+                      <span className="block">data recovery, and more backed by honest pricing.</span>
+                    </p>
+                  </motion.div>
 
                 </div>
+
+                {/* STATS ROW */}
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.9, delay: 3.6, ease: [0.16, 1, 0.3, 1] }}
+                  className="pointer-events-auto mt-8 grid w-full grid-cols-3 divide-x divide-slate-300/60 border-t border-slate-300/60 px-2 pt-5 sm:mt-10 sm:pl-[1.5%] sm:pr-[6%] lg:pl-[1.2%] lg:pr-[10%]"
+                >
+                  {STATS.map((stat) => (
+                    <div key={stat.l} className="flex flex-col items-center px-2 text-center sm:first:pl-0 sm:first:items-start sm:first:text-left sm:px-4">
+                      <span className="font-black uppercase tracking-tight text-slate-900 tabular-nums text-[clamp(1.25rem,5vw,2rem)] sm:text-[clamp(1.25rem,3.2vw,2rem)] leading-none">
+                        {stat.v}
+                      </span>
+                      <span className="mt-2 text-[9px] sm:text-[11px] font-bold uppercase tracking-widest text-slate-500">
+                        {stat.l}
+                      </span>
+                    </div>
+                  ))}
+                </motion.div>
 
               </motion.div>
 

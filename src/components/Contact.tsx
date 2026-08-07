@@ -1,126 +1,115 @@
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
+import { useRef, useState } from 'react';
+import { motion, useInView, type Variants } from 'framer-motion';
 import { MapPin, Phone, Clock, Send, TerminalSquare } from 'lucide-react';
 
-export default function Contact() {
-  // --- Scroll Trigger Animation State ---
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
+/* ============================================================
+   MOTION
+   ============================================================ */
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
+};
 
-  // --- Form State ---
+export default function Contact() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const inView = useInView(sectionRef, { once: true, margin: '-60px' });
+
+  /* --- Form State --- */
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
     email: '',
     service: '',
-    message: ''
+    message: '',
   });
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold: 0.15 } // Triggers when 15% of the section is visible
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  // --- Handle Form Submission to WhatsApp ---
+  /* --- Handle Form Submission to WhatsApp --- */
   const handleWhatsAppSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Construct the WhatsApp message
     const text = `*New Website Inquiry*%0A%0A*Name:* ${formData.name}%0A*Phone:* ${formData.phone}%0A*Email:* ${formData.email || 'Not provided'}%0A*Inquiry Type:* ${formData.service || 'Not selected'}%0A*Details:* ${formData.message}`;
 
-    // Use your primary support number (Include country code, no + or spaces)
-    const whatsappNumber = "919391919214"; 
+    const whatsappNumber = "919391919214";
 
-    // Redirect to WhatsApp
     window.open(`https://wa.me/${whatsappNumber}?text=${text}`, '_blank');
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
       ...formData,
-      [e.target.id]: e.target.value
+      [e.target.id]: e.target.value,
     });
   };
 
   return (
-    <section 
-      id="contact" 
+    <section
       ref={sectionRef}
-      className="w-full bg-slate-950 relative overflow-hidden border-t border-slate-900 py-16 lg:py-24 px-6 lg:px-12"
+      id="contact"
+      className="relative w-full overflow-hidden bg-gradient-to-b from-white via-blue-50/30 to-white pt-4 pb-16 sm:pt-6 sm:pb-24 px-5 sm:px-8 lg:px-12"
     >
-      
-      {/* --- BACKGROUND ELEMENTS --- */}
-      {/* Subtle Tech Grid */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none z-0" 
-           style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '48px 48px' }}>
+
+      {/* ================= BACKGROUND ACCENTS ================= */}
+      <div className="pointer-events-none absolute inset-0 z-0">
+        <div className="absolute right-[-10%] top-[10%] h-[45vw] w-[45vw] max-h-[460px] max-w-[460px] rounded-full bg-blue-400/15 blur-[110px]" />
+        <div className="absolute left-[-8%] bottom-[5%] h-[30vw] w-[30vw] max-h-[320px] max-w-[320px] rounded-full bg-indigo-400/10 blur-[90px]" />
       </div>
 
-      {/* Slanted Orange Accent Line (Top Right) */}
-      <div className="absolute right-0 top-0 w-[30%] h-full pointer-events-none z-0 overflow-hidden hidden lg:block">
-        <div className="absolute right-[-20%] top-[-10%] h-[120%] flex gap-4 transform rotate-[25deg] opacity-[0.03]">
-          <div className="w-4 h-full bg-blue-600"></div>
-          <div className="w-16 h-full bg-blue-600"></div>
-          <div className="w-1 h-full bg-blue-600"></div>
+      {/* Slanted line motif — same recurring device as CoreValues, tuned to light bg */}
+      <div className="pointer-events-none absolute right-0 top-0 z-0 hidden h-full w-[30%] overflow-hidden lg:block">
+        <div className="absolute right-[-20%] top-[-10%] flex h-[120%] rotate-[25deg] gap-4 opacity-[0.06]">
+          <div className="h-full w-4 bg-blue-600" />
+          <div className="h-full w-16 bg-blue-600" />
+          <div className="h-full w-1 bg-blue-600" />
         </div>
       </div>
 
-      {/* Ambient Orange Glow behind the form */}
-      <div className="absolute bottom-[-10%] right-[10%] w-[400px] h-[400px] bg-blue-600/10 blur-[120px] rounded-full pointer-events-none z-0"></div>
+      <div className="relative z-10 mx-auto max-w-7xl">
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        
-        {/* --- HEADER --- */}
-        <div 
-          className={`text-center md:text-left mb-12 ${isVisible ? 'animate-in fade-in slide-in-from-bottom-8 duration-700' : 'opacity-0'}`}
-          style={isVisible ? { animationFillMode: 'both' } : {}}
+        {/* ================= HEADER ================= */}
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          animate={inView ? 'show' : 'hidden'}
+          className="mb-12 text-center md:text-left"
         >
-          <div className="mb-3 flex items-center justify-center md:justify-start gap-2 text-[10px] font-black uppercase tracking-widest text-blue-500">
+          <div className="mb-3 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-blue-600 md:justify-start">
             <TerminalSquare className="h-4 w-4" />
-            <span className="tracking-[0.2em]">Initiate Connection</span>
+            <span>Initiate Connection</span>
           </div>
-          <h2 className="text-4xl lg:text-6xl font-black text-white uppercase tracking-tighter leading-none mb-4">
-            Get In <span className="text-transparent" style={{ WebkitTextStroke: '1.5px #3b82f6' }}>Touch</span>
+          <h2 className="mb-4 text-4xl font-black uppercase leading-none tracking-tighter text-slate-950 lg:text-6xl">
+            Get In <span className="text-blue-600">Touch.</span>
           </h2>
-          <p className="text-slate-400 font-medium text-sm max-w-md mx-auto md:mx-0 border-l-2 border-blue-600 pl-3">
+          <p className="mx-auto max-w-md border-l-2 border-blue-600 pl-3 text-sm font-semibold text-slate-700 md:mx-0">
             Whether you need emergency data recovery, a custom build quote, or routine maintenance, our lab is standing by.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="flex flex-col lg:flex-row gap-12 lg:gap-20">
-          
-          {/* --- LEFT COLUMN: CONTACT DETAILS & MAP --- */}
-          <div 
-            className={`w-full lg:w-[45%] flex flex-col gap-8 ${isVisible ? 'animate-in fade-in slide-in-from-left-8 duration-700' : 'opacity-0'}`}
-            style={isVisible ? { animationFillMode: 'both', animationDelay: '200ms' } : {}}
+        <div className="flex flex-col gap-12 lg:flex-row lg:gap-16">
+
+          {/* ================= LEFT: CONTACT DETAILS & MAP ================= */}
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            animate={inView ? 'show' : 'hidden'}
+            transition={{ delay: 0.1 }}
+            className="flex w-full flex-col gap-4 lg:w-[45%]"
           >
-            
+
             {/* Info Cards Matrix */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
               {/* Address Node */}
-              <div className="col-span-1 sm:col-span-2 bg-slate-900/50 border border-slate-800 p-5 rounded-xl hover:border-blue-500/50 transition-colors group relative overflow-hidden">
-                <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-600 scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-300"></div>
+              <div className="group relative col-span-1 overflow-hidden rounded-xl border-2 border-slate-900 bg-white p-5 shadow-sm transition-colors hover:border-blue-600 sm:col-span-2">
+                <div className="absolute left-0 top-0 bottom-0 w-1 origin-top scale-y-0 bg-blue-600 transition-transform duration-300 group-hover:scale-y-100" />
                 <div className="flex items-start gap-4">
-                  <div className="p-2.5 bg-slate-950 border border-slate-800 rounded-lg text-blue-500 group-hover:bg-blue-500/10 transition-colors">
+                  <div className="rounded-lg border-2 border-slate-900 bg-blue-50 p-2.5 text-blue-600 transition-colors group-hover:border-blue-600 group-hover:bg-blue-600 group-hover:text-white">
                     <MapPin className="h-5 w-5" />
                   </div>
                   <div>
-                    <h4 className="text-white font-bold text-xs uppercase tracking-widest mb-1.5">Headquarters</h4>
-                    <p className="text-slate-400 text-[11px] leading-relaxed font-medium">
+                    <h4 className="mb-1.5 text-xs font-black uppercase tracking-widest text-slate-950">Headquarters</h4>
+                    <p className="text-[11px] font-semibold leading-relaxed text-slate-700">
                       3-2-33, Hanuman Temple Rd,<br />
                       Bagh Ameer, Baghameeri Village,<br />
                       Kukatpally, Hyderabad,<br />
@@ -131,126 +120,129 @@ export default function Contact() {
               </div>
 
               {/* Phone Node */}
-              <div className="bg-slate-900/50 border border-slate-800 p-5 rounded-xl hover:border-blue-500/50 transition-colors group relative overflow-hidden">
-                <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-600 scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-300"></div>
+              <div className="group relative overflow-hidden rounded-xl border-2 border-slate-900 bg-white p-5 shadow-sm transition-colors hover:border-blue-600">
+                <div className="absolute left-0 top-0 bottom-0 w-1 origin-top scale-y-0 bg-blue-600 transition-transform duration-300 group-hover:scale-y-100" />
                 <div className="flex flex-col gap-3">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-slate-950 border border-slate-800 rounded-lg text-blue-500 group-hover:bg-blue-500/10 transition-colors">
+                    <div className="rounded-lg border-2 border-slate-900 bg-blue-50 p-2 text-blue-600 transition-colors group-hover:border-blue-600 group-hover:bg-blue-600 group-hover:text-white">
                       <Phone className="h-4 w-4" />
                     </div>
-                    <h4 className="text-white font-bold text-[10px] uppercase tracking-widest">Support Line</h4>
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-950">Support Line</h4>
                   </div>
-                  <div className="text-slate-300 font-medium text-xs">
-                    <a href="tel:+919391919214" className="hover:text-blue-400 transition-colors cursor-pointer block mb-1">9391919214</a>
-                    <a href="tel:+919391919215" className="hover:text-blue-400 transition-colors cursor-pointer block">9391919215</a>
+                  <div className="text-xs font-bold text-slate-800">
+                    <a href="tel:+919391919214" className="mb-1 block cursor-pointer transition-colors hover:text-blue-600">9391919214</a>
+                    <a href="tel:+919391919215" className="block cursor-pointer transition-colors hover:text-blue-600">9391919215</a>
                   </div>
                 </div>
               </div>
 
               {/* Hours Node */}
-              <div className="bg-slate-900/50 border border-slate-800 p-5 rounded-xl hover:border-blue-500/50 transition-colors group relative overflow-hidden">
-                <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-600 scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-300"></div>
+              <div className="group relative overflow-hidden rounded-xl border-2 border-slate-900 bg-white p-5 shadow-sm transition-colors hover:border-blue-600">
+                <div className="absolute left-0 top-0 bottom-0 w-1 origin-top scale-y-0 bg-blue-600 transition-transform duration-300 group-hover:scale-y-100" />
                 <div className="flex flex-col gap-3">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-slate-950 border border-slate-800 rounded-lg text-blue-500 group-hover:bg-blue-500/10 transition-colors">
+                    <div className="rounded-lg border-2 border-slate-900 bg-blue-50 p-2 text-blue-600 transition-colors group-hover:border-blue-600 group-hover:bg-blue-600 group-hover:text-white">
                       <Clock className="h-4 w-4" />
                     </div>
-                    <h4 className="text-white font-bold text-[10px] uppercase tracking-widest">Business Hours</h4>
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-950">Business Hours</h4>
                   </div>
-                  <div className="text-slate-300 font-medium text-[11px] leading-relaxed">
+                  <div className="text-[11px] font-semibold leading-relaxed text-slate-800">
                     <p>Mon - Sat</p>
-                    <p className="text-blue-500 font-bold mt-0.5">10:00 AM - 8:00 PM</p>
+                    <p className="mt-0.5 font-black text-blue-600">10:00 AM - 8:00 PM</p>
                   </div>
                 </div>
               </div>
 
             </div>
 
-            {/* Google Maps iFrame Terminal */}
-            <div className="w-full h-64 bg-slate-900 border border-slate-800 rounded-xl overflow-hidden relative group">
-              <div className="absolute top-2 left-2 bg-slate-950/80 backdrop-blur text-blue-500 text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded border border-slate-700 z-10">
+            {/* Google Maps iFrame */}
+            <div className="group relative h-64 w-full overflow-hidden rounded-xl border-2 border-slate-900 bg-slate-100 shadow-sm">
+              <div className="absolute left-2 top-2 z-10 rounded border-2 border-slate-900 bg-white px-2 py-1 text-[9px] font-black uppercase tracking-widest text-blue-600">
                 Live Radar
               </div>
-              <iframe 
-                src="https://maps.google.com/maps?q=Lucky+Computers,+3-2-33,+Hanuman+Temple+Rd,+Bagh+Ameer,+Kukatpally,+Hyderabad&t=m&z=15&output=embed&iwloc=near" 
+              <iframe
+                src="https://maps.google.com/maps?q=Lucky+Computers,+3-2-33,+Hanuman+Temple+Rd,+Bagh+Ameer,+Kukatpally,+Hyderabad&t=m&z=15&output=embed&iwloc=near"
                 title="Lucky Computers Location"
-                className="w-full h-full grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
-                style={{ border: 0 }} 
-                allowFullScreen={true} 
-                loading="lazy" 
+                className="h-full w-full grayscale-[40%] opacity-90 transition-all duration-700 group-hover:grayscale-0 group-hover:opacity-100"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               ></iframe>
             </div>
 
-          </div>
+          </motion.div>
 
-          {/* --- RIGHT COLUMN: CONTACT FORM --- */}
-          <div 
-            className={`w-full lg:w-[55%] ${isVisible ? 'animate-in fade-in slide-in-from-right-8 duration-700' : 'opacity-0'}`}
-            style={isVisible ? { animationFillMode: 'both', animationDelay: '400ms' } : {}}
+          {/* ================= RIGHT: CONTACT FORM ================= */}
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            animate={inView ? 'show' : 'hidden'}
+            transition={{ delay: 0.2 }}
+            className="w-full lg:w-[55%]"
           >
-            <div className="bg-slate-900/40 border border-slate-800 p-6 lg:p-10 rounded-2xl backdrop-blur-sm relative overflow-hidden">
-              
-              {/* Form Graphic Accents */}
-              <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/5 blur-[40px] rounded-full pointer-events-none"></div>
-              <div className="absolute top-0 right-0 w-12 h-1 bg-blue-600"></div>
-              
-              <h3 className="text-2xl font-black text-white uppercase tracking-tight mb-8">
-                Send a <span className="text-blue-500">Message</span>
+            <div className="relative overflow-hidden rounded-2xl border-2 border-slate-900 bg-white p-6 shadow-sm lg:p-10">
+
+              {/* Form graphic accents */}
+              <div className="pointer-events-none absolute right-0 top-0 h-24 w-24 rounded-full bg-blue-400/10 blur-[40px]" />
+              <div className="absolute right-0 top-0 h-1.5 w-12 bg-blue-600" />
+
+              <h3 className="mb-8 text-2xl font-black uppercase tracking-tight text-slate-950">
+                Send a <span className="text-blue-600">Message</span>
               </h3>
 
-              <form className="flex flex-col gap-5 relative z-10" onSubmit={handleWhatsAppSubmit}>
-                
+              <form className="relative z-10 flex flex-col gap-5" onSubmit={handleWhatsAppSubmit}>
+
                 {/* Top Row: Name & Phone */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="name" className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Full Name</label>
-                    <input 
-                      type="text" 
-                      id="name" 
+                    <label htmlFor="name" className="text-[10px] font-black uppercase tracking-widest text-slate-800">Full Name</label>
+                    <input
+                      type="text"
+                      id="name"
                       required
                       value={formData.name}
                       onChange={handleChange}
                       placeholder="John Doe"
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-3.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                      className="w-full rounded-lg border-2 border-slate-900 bg-white px-4 py-3.5 text-sm font-medium text-slate-950 placeholder:text-slate-400 placeholder:font-normal transition-colors focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20"
                     />
                   </div>
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="phone" className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Phone Number</label>
-                    <input 
-                      type="tel" 
-                      id="phone" 
+                    <label htmlFor="phone" className="text-[10px] font-black uppercase tracking-widest text-slate-800">Phone Number</label>
+                    <input
+                      type="tel"
+                      id="phone"
                       required
                       value={formData.phone}
                       onChange={handleChange}
                       placeholder="+91 00000 00000"
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-3.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                      className="w-full rounded-lg border-2 border-slate-900 bg-white px-4 py-3.5 text-sm font-medium text-slate-950 placeholder:text-slate-400 placeholder:font-normal transition-colors focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20"
                     />
                   </div>
                 </div>
 
                 {/* Email */}
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="email" className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Email Address</label>
-                  <input 
-                    type="email" 
+                  <label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-slate-800">Email Address</label>
+                  <input
+                    type="email"
                     id="email"
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="johndoe@example.com"
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-3.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                    className="w-full rounded-lg border-2 border-slate-900 bg-white px-4 py-3.5 text-sm font-medium text-slate-950 placeholder:text-slate-400 placeholder:font-normal transition-colors focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20"
                   />
                 </div>
 
                 {/* Service Selection */}
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="service" className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Inquiry Type</label>
-                  <select 
-                    id="service" 
+                  <label htmlFor="service" className="text-[10px] font-black uppercase tracking-widest text-slate-800">Inquiry Type</label>
+                  <select
+                    id="service"
                     required
                     value={formData.service}
                     onChange={handleChange}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-3.5 text-sm text-slate-300 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors appearance-none cursor-pointer"
+                    className="w-full cursor-pointer appearance-none rounded-lg border-2 border-slate-900 bg-white px-4 py-3.5 text-sm font-medium text-slate-950 transition-colors focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20"
                   >
                     <option value="" disabled>Select a Service...</option>
                     <option value="PC & Laptop Repairs">PC & Laptop Repairs</option>
@@ -263,30 +255,30 @@ export default function Contact() {
 
                 {/* Message */}
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="message" className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Diagnostic Details</label>
-                  <textarea 
-                    id="message" 
+                  <label htmlFor="message" className="text-[10px] font-black uppercase tracking-widest text-slate-800">Diagnostic Details</label>
+                  <textarea
+                    id="message"
                     rows={4}
                     required
                     value={formData.message}
                     onChange={handleChange}
                     placeholder="Briefly describe the issue or your requirements..."
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-3.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors resize-none"
+                    className="w-full resize-none rounded-lg border-2 border-slate-900 bg-white px-4 py-3.5 text-sm font-medium text-slate-950 placeholder:text-slate-400 placeholder:font-normal transition-colors focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20"
                   ></textarea>
                 </div>
 
-                {/* Submit Button */}
-                <button 
-                  type="submit" 
-                  className="mt-2 w-full bg-blue-600 text-white font-black uppercase tracking-widest text-xs py-4 rounded-lg flex items-center justify-center gap-3 transition-all duration-300 hover:bg-white hover:text-slate-900 group shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]"
+                {/* Submit Button — matches Hero / Navbar primary CTA pattern */}
+                <button
+                  type="submit"
+                  className="group mt-2 flex w-full items-center justify-center gap-3 rounded-lg bg-slate-950 py-4 text-xs font-black uppercase tracking-widest text-white shadow-[0_8px_24px_rgba(15,23,42,0.25)] transition-all duration-300 hover:bg-blue-600 hover:shadow-[0_8px_30px_rgba(37,99,235,0.4)] active:scale-[0.98]"
                 >
                   Send
-                  <Send className="w-4 h-4 transform transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
+                  <Send className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
                 </button>
 
               </form>
             </div>
-          </div>
+          </motion.div>
 
         </div>
       </div>

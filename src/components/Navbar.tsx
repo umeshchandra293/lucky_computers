@@ -11,7 +11,7 @@ const NAV_LINKS = [
   { name: 'Why Us', href: '#why-us' },
 ] as const;
 
-const WHATSAPP_URL = 'https://wa.me/919999999999?text=Hi%2C%20my%20laptop%20needs%20repair';
+const CALL_URL = 'tel:+919618849601';
 
 function NavLink({ name, href }: { name: string; href: string }) {
   return (
@@ -30,8 +30,6 @@ export default function Navbar() {
 
   return (
     <>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap');`}</style>
-
       <motion.header
         initial={{ opacity: 0, y: -24 }}
         animate={{ opacity: 1, y: 0 }}
@@ -50,17 +48,14 @@ export default function Navbar() {
               alt="Lucky Computers Logo"
               className="h-8 w-8 sm:h-10 sm:w-10 shrink-0 rounded-full object-cover shadow-sm ring-2 ring-white/70"
             />
-            <span className="flex flex-col leading-none">
+            <div className="flex flex-col leading-none">
               <span className="text-[13px] sm:text-base font-black tracking-tight text-slate-900">
                 LUCKY COMPUTERS
               </span>
-              <span
-                className="-mt-0.5 text-[11px] sm:text-sm text-blue-600"
-                style={{ fontFamily: "'Caveat', cursive" }}
-              >
-                fast, honest &amp; reliable
+              <span className="mt-1 hidden text-[8px] font-bold uppercase tracking-[0.15em] text-blue-600 sm:block">
+                Fast. Reliable. Honest.
               </span>
-            </span>
+            </div>
           </a>
 
           {/* ================= DESKTOP LINKS ================= */}
@@ -75,9 +70,7 @@ export default function Navbar() {
 
             {/* Desktop Contact CTA — mirrors the hero's "Get Directions" button */}
             <a
-              href={WHATSAPP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+              href={CALL_URL}
               className="group relative hidden h-11 shrink-0 items-center justify-between gap-3 overflow-hidden rounded-full bg-slate-900 pl-5 pr-1.5 text-xs font-bold uppercase tracking-widest text-white transition-all duration-300 hover:bg-blue-600 hover:shadow-[0_8px_24px_rgba(37,99,235,0.4)] active:scale-95 md:flex"
             >
               <span className="relative z-10">Contact</span>
@@ -126,9 +119,7 @@ export default function Navbar() {
                 <div className="my-2 h-px w-full bg-slate-200" />
                 
                 <a
-                  href={WHATSAPP_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href={CALL_URL}
                   onClick={() => setIsOpen(false)}
                   className="group relative flex w-full items-center justify-between overflow-hidden rounded-xl bg-slate-900 py-2.5 pl-4 pr-2 text-sm font-bold uppercase tracking-widest text-white transition-colors hover:bg-blue-600 active:scale-[0.98]"
                 >

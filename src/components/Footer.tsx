@@ -8,12 +8,6 @@ import {
 } from 'lucide-react';
 
 // --- CUSTOM SVG ICONS (Matches Lucide Aesthetic) ---
-const FacebookIcon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-  </svg>
-);
-
 const InstagramIcon = ({ className }: { className?: string }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
     <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
@@ -22,20 +16,16 @@ const InstagramIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const TwitterIcon = ({ className }: { className?: string }) => (
+const YoutubeIcon = ({ className }: { className?: string }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
-  </svg>
-);
-
-const LinkedinIcon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-    <rect x="2" y="9" width="4" height="12"></rect>
-    <circle cx="4" cy="4" r="2"></circle>
+    <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"></path>
+    <path d="m10 15 5-3-5-3z"></path>
   </svg>
 );
 // --------------------------------------------------
+
+const INSTAGRAM_URL = 'https://www.instagram.com/luckycomputers_official?igsh=MXRzNGlkaXN0eGJsag==';
+const YOUTUBE_URL = 'https://youtube.com/@luckycomputers-official?si=yNwvEunSRS9Uw9Nv';
 
 export default function Footer() {
   const [isVisible, setIsVisible] = useState(false);
@@ -142,10 +132,9 @@ export default function Footer() {
               </div>
               <div className="flex items-start gap-3 group">
                 <Phone className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" />
-                <div className="flex flex-col text-xs sm:text-sm text-slate-600 font-medium gap-1">
-                  <a href="tel:+919391919214" className="hover:text-blue-600 transition-colors py-0.5">9391919214</a>
-                  <a href="tel:+919391919215" className="hover:text-blue-600 transition-colors py-0.5">9391919215</a>
-                </div>
+                <a href="tel:+919618849601" className="text-xs sm:text-sm text-slate-600 font-medium hover:text-blue-600 transition-colors py-0.5">
+                  9618849601
+                </a>
               </div>
               <div className="flex items-start gap-3 group">
                 <Globe className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" />
@@ -166,17 +155,11 @@ export default function Footer() {
               Stay updated with our latest repairs, builds, and tech tips.
             </p>
             <div className="flex items-center gap-3 flex-wrap">
-              <a href="#" aria-label="Facebook" className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center bg-slate-100 border border-slate-200 rounded-lg text-slate-600 hover:text-white hover:border-blue-600 hover:bg-blue-600 transition-all duration-300 hover:-translate-y-1">
-                <FacebookIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-              </a>
-              <a href="#" aria-label="Instagram" className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center bg-slate-100 border border-slate-200 rounded-lg text-slate-600 hover:text-white hover:border-blue-600 hover:bg-blue-600 transition-all duration-300 hover:-translate-y-1">
+              <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center bg-slate-100 border border-slate-200 rounded-lg text-slate-600 hover:text-white hover:border-blue-600 hover:bg-blue-600 transition-all duration-300 hover:-translate-y-1">
                 <InstagramIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </a>
-              <a href="#" aria-label="Twitter" className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center bg-slate-100 border border-slate-200 rounded-lg text-slate-600 hover:text-white hover:border-blue-600 hover:bg-blue-600 transition-all duration-300 hover:-translate-y-1">
-                <TwitterIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-              </a>
-              <a href="#" aria-label="LinkedIn" className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center bg-slate-100 border border-slate-200 rounded-lg text-slate-600 hover:text-white hover:border-blue-600 hover:bg-blue-600 transition-all duration-300 hover:-translate-y-1">
-                <LinkedinIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <a href={YOUTUBE_URL} target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center bg-slate-100 border border-slate-200 rounded-lg text-slate-600 hover:text-white hover:border-blue-600 hover:bg-blue-600 transition-all duration-300 hover:-translate-y-1">
+                <YoutubeIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </a>
             </div>
           </div>
